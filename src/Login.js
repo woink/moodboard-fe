@@ -70,9 +70,9 @@ class Login extends React.Component {
 
 									<form style={formForm} onSubmit={this.submitHandler}>
 										<TextField
-											fullWidth="true"
+											fullWidth
+											required
 											label="Username"
-											required="true"
 											size="small"
 											variant="outlined"
 											name="username"
@@ -83,13 +83,13 @@ class Login extends React.Component {
 										<br></br>
 
 										<TextField
-											fullWidth="true"
+											fullWidth
+											required
 											label="Password"
 											variant="outlined"
 											type="password"
 											name="password"
 											value={this.state.password}
-											required="true"
 											size="small"
 											onChange={this.changeHandler}
 										/>

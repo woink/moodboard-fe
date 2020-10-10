@@ -1,7 +1,7 @@
 import React from 'react'
 
 function ImgBin(props) {
-console.log(props.images)
+console.log("Img Bin: ", props.images)
   return (
 
     <div style={imgBinDiv}>

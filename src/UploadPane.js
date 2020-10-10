@@ -16,12 +16,16 @@ export default function UploadPane() {
   const handleUploadSubmit = (e) => {
     e.preventDefault()
     
-    let formData = new FormData()
+    const token = localStorage.getItem('token')
+    const formData = new FormData()
     formData.append('image[title]', title)
     formData.append('img_src', image)
 
-    fetch('http://localhost:3000/api/v1/user/1/board/1/images', {
+    fetch('http://localhost:3000/images', {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
       body: formData 
       })
       .then(console.log('submitted'))
