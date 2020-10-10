@@ -110,7 +110,7 @@ export default function PersistentDrawerLeft() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Persistent drawer
+            Moodboard Maker
           </Typography>
         </Toolbar>
       </AppBar>

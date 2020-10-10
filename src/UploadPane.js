@@ -1,35 +1,41 @@
 import React, { useState } from 'react'
 
 export default function UploadPane() {
-  const [image, setImage] = useState();
+  const [image, setImage] = useState("");
   const [title, setTitle] = useState("")
+  const [isImgBinUpdated] = useState(false)
 
   const handleImageChange = e => {
     setImage(e.target.files[0])
   }
 
-  // const handleTitleChange = e => {
-  //   setTitle(e.target.value)
-  //   console.log(e.target.value)
-  // }
+  const handleTitleChange = e => {
+    setTitle(e.target.value)
+  }
 
-  const handleUpload = (e, image) => {
+  const handleUploadSubmit = (e) => {
     e.preventDefault()
-    console.log("handle")
-    const formData = new FormData(image)
-    console.log(formData)
+    
+    let formData = new FormData()
+    formData.append('image[title]', title)
+    formData.append('img_src', image)
+
     fetch('http://localhost:3000/api/v1/images/', {
       method: "POST",
-      headers: {
-        "Accept": "application/json"
-      },
       body: formData
       })
-      .then(console.log)
-    }
+      .then(console.log('submitted'))
+        // debugger
+      // .then(console.log)
+  }
+  
+  function useImgsUploaded() {
+    
+  }
 
   return (
-    <form onSubmit={handleUpload}>
+    <div style={uploadDiv}>
+    <form onSubmit={handleUploadSubmit}>
       <label>
         Title
          <input
@@ -49,5 +55,11 @@ export default function UploadPane() {
         </label>
       <button type='submit' value="Submit">Submit</button>
   </form>
+  </div>
   )
+}
+
+const uploadDiv = {
+  flexDirection: 'column',
+  border: '1px solid black'
 }

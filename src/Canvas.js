@@ -10,8 +10,9 @@ class Canvas extends Component {
 
   render() {
     return (
-      <Stage width={window.innerWidth} height={window.innerHeight}>
-        <Layer>
+      <div style={stage}>
+      <Stage  width={420} height={297}>
+        <Layer >
           <Text
             text="Draggable Text"
             x={this.state.x}
@@ -32,9 +33,18 @@ class Canvas extends Component {
             }}
           />
         </Layer>
-      </Stage>
+        </Stage>
+      </div>
     );
   }
 }
 
 export default Canvas
+
+const stage = {
+  display: 'flex',
+  justifyContent: 'center',
+  border: '1px solid black',
+  width: 420,
+  height: 297
+}
