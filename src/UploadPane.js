@@ -20,18 +20,16 @@ export default function UploadPane() {
     formData.append('image[title]', title)
     formData.append('img_src', image)
 
-    fetch('http://localhost:3000/api/v1/images/', {
+    fetch('http://localhost:3000/api/v1/user/1/board/1/images', {
       method: "POST",
-      body: formData
+      body: formData 
       })
       .then(console.log('submitted'))
         // debugger
       // .then(console.log)
   }
   
-  function useImgsUploaded() {
-    
-  }
+  // function useImgsUploaded() 
 
   return (
     <div style={uploadDiv}>
