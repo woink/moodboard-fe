@@ -5,7 +5,7 @@ function BoardsList(props) {
 
   return (
     <div>
-      <Button>{props.title}.</Button>
+      <Button>{props.title}</Button>
     </div>
   )
 }

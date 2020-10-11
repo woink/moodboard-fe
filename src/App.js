@@ -3,7 +3,7 @@ import './App.css';
 import Main from './Main'
 import Login from './Login'
 import Drawer from './Drawer'
-
+import { Switch, Route} from 'react-router-dom'
 class App extends React.Component {
 	state = {
 		user: null,
@@ -54,8 +54,11 @@ class App extends React.Component {
       <>
         { this.state.user ?
           <>
-            <Drawer />
-            <Main user={this.state.user}/>
+            <Drawer user={this.state.user}/>
+            
+            <Route path='/' exact render={() => <Main user={this.state.user}/>}/>
+            
+          
             
           </>
           :

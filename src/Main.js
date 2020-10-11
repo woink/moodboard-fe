@@ -1,6 +1,6 @@
 import React from 'react'
 import UploadPane from './UploadPane'
-
+// import Drawer from './Drawer'
 import Canvas from './Canvas'
 import ImgBin from './ImgBin'
 import BoardContainer from './BoardCointainer'
@@ -18,7 +18,8 @@ class Main extends React.Component {
       headers: { Authorization: `Bearer ${token}`}
 		})
 			.then((resp) => resp.json())
-			.then((upImages) => {
+      .then((upImages) => {
+        console.log(upImages)
 				this.setState({
 					images: upImages,
 				});
@@ -26,17 +27,18 @@ class Main extends React.Component {
 	};
 
 	render() {
-    console.log("Initial Render: ", this.state.images)
-		return (
-
-				<div style={main}>
-        <UploadPane imgUploaded={this.imgUploaded} />
-        <BoardContainer style={middle}/>
+    console.log("Initial Render: ", this.state.user)
+    return (
+      <>
+        {/* <Drawer user={this.props.user} /> */}
+				<div>
+          <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
+          <BoardContainer user={this.state.user} />
         <Canvas style={middle}/>
         <ImgBin />
         
 				</div>
-
+      </>
 		);
 	}
 }
