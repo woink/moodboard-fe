@@ -7,13 +7,13 @@ import BoardContainer from './BoardCointainer'
 
 class Main extends React.Component {
   state = {
-    user: this.props.user,
+    // user: this.props.user,
 		images: [],
 	};
 
   componentDidMount = () => {
     const token = localStorage.getItem('token')
-		fetch(`http://localhost:3000/api/v1/profile`, {
+		fetch(`http://localhost:3000/boards/1/images`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}`}
 		})
@@ -27,7 +27,7 @@ class Main extends React.Component {
 	};
 
 	render() {
-    console.log("Initial Render: ", this.state.user)
+    // console.log("Initial Render: ", this.state.user)
     return (
       <>
         {/* <Drawer user={this.props.user} /> */}
