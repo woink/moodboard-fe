@@ -1,13 +1,13 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Typography, TextField, Button } from '@material-ui/core'
 import CreateBoard from './CreateBoard'
 import BoardsList from './BoardsList'
 
 class BoardContainer extends React.Component {
   
   state = {
-    // user: this.state.user,
-    boardsArray: []
+    boardsArray: [],
+    title: ''
   }
 
   componentDidMount() {
@@ -31,20 +31,70 @@ class BoardContainer extends React.Component {
     const boards = this.state.boardsArray
     if (boards.length > 0) {
       return boards.map(board => {
-        return <BoardsList key={board.id} title={board.title} />
+        return (
+          <div style={boardDiv}>
+            <BoardsList key={board.id} title={board.title} removeBoard={this.removeBoard} />
+            <Button id={board.id} removeBoard={this.removeBoard}>X</Button>
+          </div>
+        )
       })
     }
   }
-
-
-  clickHandler = () => {
-    console.log('createBoard')
+  
+  removeBoard = (e) => {
+    console.log('removeBoard', e.target.id)
   }
-  render() {
 
+  submitHandler = e => {
+    e.preventDefault()
+
+    const token = localStorage.getItem('token')
+    fetch('http://localhost:3000/boards', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        accepts: 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        user_id: this.props.user.user.id,
+        title: this.state.title
+      }),
+    })
+      .then(resp => resp.json())
+      .then(board => {
+        console.log(board)
+        const newBoardsArray = [...this.state.boardsArray, board]
+        this.setState({
+          boardsArray: newBoardsArray,
+          title: ''
+        })
+      })
+    }
+    
+  changeHandler = e => {
+  this.setState({
+    title: e.target.value
+    })
+  }
+
+
+  render() {
+    console.log(this.state.title)
     return (
       <>
-      <Button onClick={this.clickHandler}>Create Board</Button>
+        <Typography>Create Board</Typography>
+        <>
+        <form onSubmit={this.submitHandler}>
+          <TextField
+            required
+            label="Title"
+            onChange={this.changeHandler}
+            value={this.state.title}
+              
+            />
+          </form>
+          </>
       {this.renderBoards()}
       </>
       )
@@ -52,3 +102,7 @@ class BoardContainer extends React.Component {
 }
 
 export default BoardContainer
+
+const boardDiv = {
+ display: 'flex'
+}

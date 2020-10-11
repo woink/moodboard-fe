@@ -2,15 +2,9 @@ import React, { useState } from 'react'
 
 export default function UploadPane() {
   const [image, setImage] = useState("");
-  const [title, setTitle] = useState("")
-  const [isImgBinUpdated] = useState(false)
 
   const handleImageChange = e => {
     setImage(e.target.files[0])
-  }
-
-  const handleTitleChange = e => {
-    setTitle(e.target.value)
   }
 
   const handleUploadSubmit = (e) => {
@@ -18,35 +12,43 @@ export default function UploadPane() {
     
     const token = localStorage.getItem('token')
     const formData = new FormData()
-    formData.append('image[title]', title)
     formData.append('img_src', image)
-
+    
     fetch('http://localhost:3000/images', {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`
       },
-      body: formData 
+      body: formData
+    })
+      .then(resp => resp.json())
+      .then(newImage => {
+        createBoardAssociation(newImage.id)
       })
-      .then(console.log('submitted'))
-        // debugger
-      // .then(console.log)
   }
   
-  // function useImgsUploaded() 
+  // need to do another fetch to get the  board id
+  const createBoardAssociation = (newImageID) => {
+    const token = localStorage.getItem('token')
+    fetch('http://localhost:3000/board_images', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+        accepts: 'application/json',
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({
+        board_id: 1,
+        image_id: newImageID
+      })
+    })
+      .then(resp => resp.json())
+      .then(console.log)
+  }
 
   return (
     <div style={uploadDiv}>
     <form onSubmit={handleUploadSubmit}>
-      <label>
-        Title
-         <input
-          type="text"
-          name="title"
-          value={title}
-          onChange={handleTitleChange}
-        />
-      </label>
         <label>Image File
          <input
           type="file"
