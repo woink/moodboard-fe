@@ -47,27 +47,7 @@ class Login extends React.Component {
 						{this.state.clicked ? (
 							<SignUp signupHandler={this.props.signupHandler} />
 						) : (
-							<CardContent>
-								<Typography
-									style={title}
-									gutterBottom
-									color="secondary"
-									align="center"
-									variant="h2"
-									component="h2"
-								>
-									ChatBox
-								</Typography>
-
 								<div style={childForm}>
-									<CardActionArea>
-										<CardMedia
-											style={loginImg}
-											image="https://i.ibb.co/PGSxdbf/Untitled-design-1.png"
-											title="Chits"
-										/>
-									</CardActionArea>
-
 									<form style={formForm} onSubmit={this.submitHandler}>
 										<TextField
 											fullWidth
@@ -112,7 +92,6 @@ class Login extends React.Component {
 										New User? Sign Up
 									</Button>
 								</div>
-							</CardContent>
 						)}
 					</Paper>
 				</Card>
