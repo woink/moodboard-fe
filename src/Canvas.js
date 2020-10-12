@@ -45,6 +45,6 @@ const stage = {
   display: 'flex',
   justifyContent: 'center',
   border: '1px solid black',
-  width: 420,
-  height: 297
+  width: 1440,
+  height: 1018
 }

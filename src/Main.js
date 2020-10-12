@@ -33,9 +33,9 @@ class Main extends React.Component {
         {/* <Drawer user={this.props.user} /> */}
 				<div>
           <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
-          <BoardContainer user={this.state.user} />
-        <Canvas style={middle}/>
-        <ImgBin />
+          {/* <BoardContainer user={this.state.user} /> */}
+        {/* <Canvas images={this.state.images} style={middle}/> */}
+          <ImgBin images={this.state.images}/>
         
 				</div>
       </>

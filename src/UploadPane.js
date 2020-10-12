@@ -27,7 +27,6 @@ export default function UploadPane() {
       })
   }
   
-  // need to do another fetch to get the  board id
   const createBoardAssociation = (newImageID) => {
     const token = localStorage.getItem('token')
     fetch('http://localhost:3000/board_images', {
