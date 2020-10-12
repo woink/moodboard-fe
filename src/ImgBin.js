@@ -27,10 +27,11 @@ function ImgBin(props) {
   const renderImages = () => {
     return props.images.map(img => {
       return <img alt=''
+        width="150vw"
         src={img.img_url}
         draggable="true"
 				onDragStart={(e) => {
-          dragUrl.current = e.target.src;
+        dragUrl.current = e.target.src;
 				}}
       />
     })
@@ -40,8 +41,11 @@ function ImgBin(props) {
 		<div>
       Try to trag and image into the stage:
       <br />
+      <div style={imgs}>
       {renderImages()}
-			<div
+      </div>
+
+			<div style={maybeDiv}
 				onDrop={(e) => {
 					// register event position
 					stageRef.current.setPointersPositions(e);
@@ -57,11 +61,12 @@ function ImgBin(props) {
 				}}
 				onDragOver={(e) => e.preventDefault()}
 			>
-				<Stage
-					width={window.innerHeight}
-					height={window.innerWidth}
-					style={stage}
-					ref={stageRef}
+        <Stage
+          width={window.innerWidth - 1000}
+          height={window.innerHeight}
+          // border={'1px solid black'}
+          style={stage}
+          ref={stageRef}
 				>
 					<Layer>
 						{images.map((image) => {
@@ -70,7 +75,7 @@ function ImgBin(props) {
 					</Layer>
 				</Stage>
 			</div>
-		</div>
+      </div>
 	);
 }
 
@@ -78,13 +83,23 @@ export default ImgBin;
 
 const imgBinDiv = {
 	border: '1px solid black',
-	justifyContent: 'center',
+  // justifyContent: 'center',
+
+  // width: "window.innerWidth"
 };
 
-// const img = {
-// 	width: '20px',
-// };
+const imgs = {
+	overflowX: 'scroll'
+};
 
 const stage = {
-  border: '1px solid black'
+  border: '8px solid green',
+  // width: 'window.innerWidth',
+  // height: 'window.innerHeight'
+}
+
+const maybeDiv = {
+  border: '1px solid red',
+  width: 'window.innerWidth - 1000',
+  height: 'window.innerHeight'
 }

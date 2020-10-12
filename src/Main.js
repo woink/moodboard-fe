@@ -8,26 +8,34 @@ import BoardContainer from './BoardCointainer'
 class Main extends React.Component {
   state = {
     // user: this.props.user,
-		images: [],
-	};
+    images: [],
+  };
 
+ 
   componentDidMount = () => {
     const token = localStorage.getItem('token')
-		fetch(`http://localhost:3000/boards/1/images`, {
+    fetch(`http://localhost:3000/boards/1/images`, {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}`}
-		})
-			.then((resp) => resp.json())
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((resp) => resp.json())
       .then((upImages) => {
         console.log(upImages)
-				this.setState({
-					images: upImages,
-				});
-			});
-	};
+        this.setState({
+          images: upImages,
+        });
+      });
+  };
+
+  imgUploaded = (obj) => {
+    this.setState(() => (
+      { images: [...this.state.images, obj] }
+    ))
+  }
+
 
 	render() {
-    // console.log("Initial Render: ", this.state.user)
+    // console.log("Initial Rernder: ", this.state.user)
     return (
       <>
         {/* <Drawer user={this.props.user} /> */}

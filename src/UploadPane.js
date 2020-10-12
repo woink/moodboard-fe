@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { Redirect } from 'react-router-dom'
 
-export default function UploadPane() {
+export default function UploadPane(props) {
   const [image, setImage] = useState("");
 
   const handleImageChange = e => {
+
     setImage(e.target.files[0])
   }
 
@@ -24,6 +26,7 @@ export default function UploadPane() {
       .then(resp => resp.json())
       .then(newImage => {
         createBoardAssociation(newImage.id)
+        props.imgUploaded(newImage)
       })
   }
   
@@ -41,9 +44,11 @@ export default function UploadPane() {
         image_id: newImageID
       })
     })
-      .then(resp => resp.json())
-      .then(console.log)
   }
+
+  // useEffect((props) => {
+  //   props.imgUploaded = true
+  // }, [uploaded])
 
   return (
     <div style={uploadDiv}>
@@ -52,12 +57,13 @@ export default function UploadPane() {
          <input
           type="file"
           accept="image/*"
-          name="image"
+            name="image"
+            // multiple="multiple"
           onChange={handleImageChange}
         />
         </label>
       <button type='submit' value="Submit">Submit</button>
-  </form>
+      </form>
   </div>
   )
 }

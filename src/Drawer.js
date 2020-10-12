@@ -127,8 +127,12 @@ export default function PersistentDrawerLeft(props) {
           </IconButton>
         </div>
         <Divider />
-        {/* <BoardContainer user={props.user}/> */}
+        <BoardContainer />
       </Drawer>
      </div>
   );
 }
+
+
+// Add to Board Container when auth is enabled
+// user={props.user}
