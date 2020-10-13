@@ -21,7 +21,7 @@ class CreateBoard extends React.Component {
         // Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        user_id: this.props.user.user.id,
+        user_id: 1,
         title: this.state.title
       }),
     })

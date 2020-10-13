@@ -34,7 +34,7 @@ class BoardContainer extends React.Component {
         return (
           <div style={boardDiv}>
             <BoardsList key={board.id} title={board.title} removeBoard={this.removeBoard} />
-            <Button id={board.id} removeBoard={this.removeBoard}>X</Button>
+            <Button id={board.id} onClick={this.removeBoard}>X</Button>
           </div>
         )
       })
@@ -54,7 +54,7 @@ class BoardContainer extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
-        // Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         user_id: 1,

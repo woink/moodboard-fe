@@ -8,35 +8,54 @@ import { Button, Container } from '@material-ui/core';
 const URLImage = ({ image }) => {
 	const [img] = useImage(image.src);
 	return (
-    <Image
+		<Image
+      image={img}
+      x={image.x}
+      y={image.y}
       // use id to remove from state
       id={image.id}
-			image={img}
-			x={image.x}
-			y={image.y}
-			// I will use offset to set origin to the center of the image
-			offsetX={img ? img.width / 2 : 0}
-			offsetY={img ? img.height / 2 : 0}
-			draggable
-			onDblClick={onSelect}
+      // use offset to set origin to the center of the image
+      offsetX={img ? img.width / 2 : 0}
+      offsetY={img ? img.height / 2 : 0}
+      draggable="true"
+			// onDblClick={onSelect}
 		/>
 	);
 };
 
 
-const onSelect = (e) => {
-  console.log(e.target)
-//  e.target.visable = false
-};
 
+// const onSelect = (e) => {
+//   console.log(e.target._id);
+//   setImages(images.slice(images.indexOf(e.target._id, 1)))
+//   // let imgsArray = 
+// };
 
-function ImgBin(props) {
-	const dragUrl = useRef();
-	const stageRef = useRef();
+const ImgBin = props => {
+  const dragUrl = useRef();
+  const stageRef = useRef();
   const [images, setImages] = useState([]);
-  const [stageWidth] = useState([window.innerWidth / 1.41])
+  const [stageWidth] = useState([window.innerWidth / 1.41]);
 
+  
+  const saveBoard = e => {
 
+    const formData = new FormData()
+    formData.append('board_state', JSON.stringify(images))
+
+    fetch('http://localhost:3000/boards/1', {
+      method: "PATCH",
+      headers: {
+        'Content-Type': 'application/json',
+        accepts: 'application/json',
+        // Authorization: `Bearer ${token}`,
+      },
+      body: formData
+    })
+      .then(resp => resp.json())
+      .then("PATCH: ", console.log)
+    }
+  
   console.log(images)
 
 	const renderImages = () => {
@@ -48,13 +67,19 @@ function ImgBin(props) {
 						width="125vw"
 						id={img.id}
 						src={img.img_url}
-						draggable="true"
+            draggable="true"
+            // onDblClick={onSelect}
 						onDragStart={(e) => {
-            dragUrl.current = e.target.src;
+              dragUrl.current = e.target.src;
+            // onDragMove=(console.log(e.target))
 						}}
 					/>
-          <Button onClick={props.removeImage} id={img.id} label="Remove" size="small">
-						
+					<Button
+						onClick={props.removeImage}
+						id={img.id}
+						label="Remove"
+						size="small"
+					>
 						Remove
 					</Button>
 				</>
@@ -62,8 +87,8 @@ function ImgBin(props) {
 		});
 	};
 
-  return (
-		<div >
+	return (
+		<div>
 			Try to trag and image into the stage:
 			<br />
 			<div style={imgs}>{renderImages()}</div>
@@ -83,21 +108,22 @@ function ImgBin(props) {
 					);
 				}}
 				onDragOver={(e) => e.preventDefault()}
-      >
-          <Stage
-            width={window.innerWidth}
-            height={window.innerHeight}
-            style={stage}
-            ref={stageRef}
-            >
-            <Layer>
-              {images.map((image) => {
-                return <URLImage image={image} />;
-              })}
-            </Layer>
-          </Stage>
-        </div>
-      </div>
+			>
+        <Button label="save" onClick={saveBoard}>Save Board</Button>
+				<Stage
+					width={window.innerWidth}
+					height={window.innerHeight}
+					style={stage}
+					ref={stageRef}
+        >
+					<Layer>
+						{images.map((image) => {
+              return <URLImage image={image} />;
+						})}
+					</Layer>
+				</Stage>
+			</div>
+		</div>
 	);
 }
 

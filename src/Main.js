@@ -8,18 +8,16 @@ class Main extends React.Component {
     // user: this.props.user,
     images: [],
   };
-
-  
  
   componentDidMount = () => {
-    const token = localStorage.getItem('token')
-    fetch(`http://localhost:3000/boards/1/images`, {
+    // const token = localStorage.getItem('token')
+    fetch(`http://localhost:3000/images`, {
       method: 'GET',
-      headers: { Authorization: `Bearer ${token}` }
+      // headers: { Authorization: `Bearer ${token}` }
     })
       .then((resp) => resp.json())
       .then((upImages) => {
-        console.log(upImages)
+        console.log("Get Request: ", upImages)
         this.setState({
           images: upImages,
         });
