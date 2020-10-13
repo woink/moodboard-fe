@@ -18,7 +18,7 @@ class CreateBoard extends React.Component {
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         user_id: this.props.user.user.id,
@@ -55,7 +55,6 @@ class CreateBoard extends React.Component {
             value={this.state.title}
           />
         </form>
-        {this.state.submitted ? <Redirect to="/" /> : null}
       </>
     )
   }

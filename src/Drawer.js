@@ -114,7 +114,7 @@ export default function PersistentDrawerLeft(props) {
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
+        variant="static"
         anchor="left"
         open={open}
         classes={{

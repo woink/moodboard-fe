@@ -1,9 +1,7 @@
 import React from 'react'
 import UploadPane from './UploadPane'
-// import Drawer from './Drawer'
-import Canvas from './Canvas'
 import ImgBin from './ImgBin'
-import BoardContainer from './BoardCointainer'
+import { baseURL } from './constants'
 
 class Main extends React.Component {
   state = {
@@ -11,6 +9,7 @@ class Main extends React.Component {
     images: [],
   };
 
+  
  
   componentDidMount = () => {
     const token = localStorage.getItem('token')
@@ -33,17 +32,27 @@ class Main extends React.Component {
     ))
   }
 
+  removeImage = (e) => {
+    const id = e.target.parentElement.id
+    // const token = localStorage.getItem('token')
+    fetch(`http://localhost:3000/images/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      }
+    })
+      .then(() => {
+        this.componentDidMount()
+      })
+  }
 
 	render() {
-    // console.log("Initial Rernder: ", this.state.user)
     return (
       <>
-        {/* <Drawer user={this.props.user} /> */}
 				<div>
           <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
-          {/* <BoardContainer user={this.state.user} /> */}
-        {/* <Canvas images={this.state.images} style={middle}/> */}
-          <ImgBin images={this.state.images}/>
+          <ImgBin images={this.state.images} removeImage={this.removeImage}/>
         
 				</div>
       </>
