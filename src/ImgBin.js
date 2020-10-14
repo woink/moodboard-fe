@@ -5,23 +5,7 @@ import { Image, Stage, Layer, Transformer, node } from 'react-konva';
 import useImage from 'use-image';
 import { Button, Container } from '@material-ui/core';
 
-const URLImage = ({ image }) => {
-	const [img] = useImage(image.src);
-	return (
-		<Image
-      image={img}
-      x={image.x}
-      y={image.y}
-      // use id to remove from state
-      id={image.id}
-      // use offset to set origin to the center of the image
-      offsetX={img ? img.width / 2 : 0}
-      offsetY={img ? img.height / 2 : 0}
-      draggable="true"
-			// onDblClick={onSelect}
-		/>
-	);
-};
+
 
 
 
@@ -37,8 +21,35 @@ const ImgBin = props => {
   const [images, setImages] = useState([]);
   const [stageWidth] = useState([window.innerWidth / 1.41]);
 
+  const URLImage = ({ image }) => {
+    const [img] = useImage(image.src);
+    return (
+      <Image
+        image={img}
+        x={image.x}
+        y={image.y}
+        // use id to remove from state
+        id={image.id}
+        // use offset to set origin to the center of the image
+        offsetX={img ? img.width / 2 : 0}
+        offsetY={img ? img.height / 2 : 0}
+        draggable="true"
+        onDragEnd={handleDragEnd}
+      />
+    );
+  };
+
+  const handleDragEnd = (e) => {
+    const stateIdx = images.findIndex(img => img.src === e.target.attrs.image.currentSrc)
+    const newPos = e.target._lastPos
+    newPos.src = e.target.attrs.image.currentSrc
+    images[stateIdx] = newPos
+    console.log("New State: ", images)
+  }
+
   
-  const saveBoard = e => {
+
+  const saveBoard = () => {
 
     const formData = new FormData()
     formData.append('board_state', JSON.stringify(images))
@@ -56,7 +67,8 @@ const ImgBin = props => {
       .then("PATCH: ", console.log)
     }
   
-  console.log(images)
+  console.log("Images State: ", images)
+  console.log("StageRef: ", stageRef)
 
 	const renderImages = () => {
 		return props.images.map((img) => {
@@ -71,8 +83,9 @@ const ImgBin = props => {
             // onDblClick={onSelect}
 						onDragStart={(e) => {
               dragUrl.current = e.target.src;
-            // onDragMove=(console.log(e.target))
-						}}
+            console.log("Drag Start: ", images)
+            }}
+            
 					/>
 					<Button
 						onClick={props.removeImage}
@@ -89,7 +102,6 @@ const ImgBin = props => {
 
 	return (
 		<div>
-			Try to trag and image into the stage:
 			<br />
 			<div style={imgs}>{renderImages()}</div>
 			<div
@@ -102,7 +114,7 @@ const ImgBin = props => {
 						images.concat([
 							{
 								...stageRef.current.getPointerPosition(),
-								src: dragUrl.current,
+                src: dragUrl.current,
 							},
 						])
 					);
