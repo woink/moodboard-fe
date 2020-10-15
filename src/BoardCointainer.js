@@ -10,9 +10,6 @@ class BoardContainer extends React.Component {
     title: ''
   }
 
-
-   
-
     componentDidMount() {
        // const token = localStorage.getItem('token')
     fetch('http://localhost:3000/boards', {
@@ -29,7 +26,6 @@ class BoardContainer extends React.Component {
       }
       )
   }
-  
 
   renderBoards = () => {
     const boards = this.state.boardsArray
@@ -38,7 +34,7 @@ class BoardContainer extends React.Component {
         console.log("renderBoard: ", board.id)
         return (
           <div id={board.id} style={boardDiv}>
-            <BoardsList key={board.id} title={board.title} removeBoard={this.removeBoard} />
+            <BoardsList key={board.id} title={board.title} loadBoard={this.loadBoard} removeBoard={this.removeBoard} />
           </div>
         )
       })
@@ -60,7 +56,6 @@ class BoardContainer extends React.Component {
       boardsArray: newArray
     })
   }
-
 
   submitHandler = e => {
     e.preventDefault()

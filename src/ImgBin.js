@@ -4,16 +4,8 @@ import { render } from '@testing-library/react';
 import { Image, Stage, Layer, Transformer, node } from 'react-konva';
 import useImage from 'use-image';
 import { Button, Container } from '@material-ui/core';
+import { ContactSupportOutlined } from '@material-ui/icons';
 
-
-
-
-
-// const onSelect = (e) => {
-//   console.log(e.target._id);
-//   setImages(images.slice(images.indexOf(e.target._id, 1)))
-//   // let imgsArray = 
-// };
 
 const ImgBin = props => {
   const dragUrl = useRef();
@@ -21,24 +13,44 @@ const ImgBin = props => {
   const [images, setImages] = useState([]);
   const [stageWidth] = useState([window.innerWidth / 1.41]);
 
-  const URLImage = ({ image }) => {
-    const [img] = useImage(image.src);
+  
+  useEffect(() => {
+    fetch(`http://localhost:3000/boards/${props.board}/board_images`)
+      .then(resp => resp.json())
+      .then(boardImgArray => {
+        console.log("First Fetch: ", boardImgArray)
+          findImgUrlID(boardImgArray)
+      }) 
+    
+    const findImgUrlID = boardImgArray => {
+      fetch(`http://localhost:3000/images`)
+        .then(resp => resp.json())
+        .then(imgList => {
+          findMatches(imgList, boardImgArray)
+        })
+    }
+    
+    const findMatches = (imgList, boardImgArray) => {
+      let newState = []
+      let i = 0
+      
+      while (i < boardImgArray.length) {
+        const imgMatch = imgList.find(img => img.id === boardImgArray[i].image_id).src
+        const newStateObj = {
+          x: boardImgArray[i].x,
+          y: boardImgArray[i].y,
+          src: imgMatch
+        }
+        newState.push(newStateObj)
+        i++
+      }
 
-    return (
-      <Image
-        image={img}
-        x={image.x}
-        y={image.y}
-        // use id to remove from state
-        id={image.id}
-        // use offset to set origin to the center of the image
-        offsetX={img ? img.width / 2 : 0}
-        offsetY={img ? img.height / 2 : 0}
-        draggable="true"
-        onDragEnd={handleDragEnd}
-      />
-    );
-  };
+      setImages(newState)
+    }
+  }, [])
+
+
+
 
   const handleDragEnd = (e) => {
     const stateIdx = images.findIndex(img => img.src === e.target.attrs.image.currentSrc)
@@ -48,6 +60,9 @@ const ImgBin = props => {
     console.log("New State: ", images)
   }
 
+  // 
+  // SAVE IMAGES W/ LOCATION
+  // 
 
   const prepImgsForSave = () => {
     images.forEach(img => findImgUrlID(img))
@@ -96,9 +111,35 @@ const ImgBin = props => {
       .then(resp => resp.json())
       .then("PATCH: ", console.log)
     }
-  
+  // ////////////////////////////////////
+
+  // Load state
+
+
+
+  console.log("current board: ", props.board)
+
+
   console.log("Images State: ", images)
-  console.log("StageRef: ", stageRef)
+
+  const URLImage = ({ image }) => {
+    const [img] = useImage(image.src);
+
+    return (
+      <Image
+        image={img}
+        x={image.x}
+        y={image.y}
+        // use id to remove from state
+        id={image.id}
+        // use offset to set origin to the center of the image
+        offsetX={img ? img.width / 2 : 0}
+        offsetY={img ? img.height / 2 : 0}
+        draggable="true"
+        onDragEnd={handleDragEnd}
+      />
+    )
+  }
 
 	const renderImages = () => {
 		return props.images.map((img) => {

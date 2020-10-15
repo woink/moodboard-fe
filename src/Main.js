@@ -7,7 +7,15 @@ class Main extends React.Component {
   state = {
     // user: this.props.user,
     images: [],
+    boardImages: []
   };
+
+
+  componentDidUpdate(prevProps) {
+    if (this.props.images !== prevProps.images) {
+      console.log("updated")
+    }
+  } 
  
   componentDidMount = () => {
     // const token = localStorage.getItem('token')
@@ -22,6 +30,16 @@ class Main extends React.Component {
           images: upImages,
         });
       });
+    
+    fetch(`http://localhost:3000/boards/${this.props.board}/board_images`, {
+      method: "GET",
+    })
+      .then(resp => resp.json())
+      .then(boardImgs => {
+        this.setState({
+        boardImages: boardImgs
+      })
+    })
   };
 
   imgUploaded = (obj) => {
@@ -31,9 +49,9 @@ class Main extends React.Component {
   }
 
   removeImage = (e) => {
-    const id = e.target.parentElement.id
+    const imgId = e.target.parentElement.id
     // const token = localStorage.getItem('token')
-    fetch(`http://localhost:3000/images/${id}`, {
+    fetch(`http://localhost:3000/images/${imgId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -43,14 +61,48 @@ class Main extends React.Component {
       .then(() => {
         this.componentDidMount()
       })
+      .then(this.findImageBoardId(imgId))
   }
 
-	render() {
+  findImageBoardId = imgId => {
+    fetch(`http://localhost:3000/boards/${this.props.board}/board_images`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      }
+    })
+      .then(resp => resp.json())
+      .then(boardImgArray => {
+        console.log("findImageBoardId: ", boardImgArray)
+        const stateBoardImgId = boardImgArray.find(boardImg => boardImg.image_id === parseInt(imgId)).id
+        this.removeBoardImage(stateBoardImgId, imgId)
+      })
+  }
+
+  removeBoardImage = (stateBoardImgId, imgId) => {
+    fetch(`http://localhost:3000/boards/${this.props.board}/board_images/${parseInt(stateBoardImgId)}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      }
+    })
+      const newImgArray = this.state.images.filter(img => img.id !== imgId)
+    this.setState({
+        images: newImgArray
+      })
+      
+  }
+
+
+  render() {
+    console.log("BoardImages State: ", this.props.board)
     return (
       <>
 				<div>
           <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
-          <ImgBin images={this.state.images} removeImage={this.removeImage}/>
+          <ImgBin board={this.props.board} boardImages={this.state.boardImages} images={this.state.images} removeImage={this.removeImage}/>
         
 				</div>
       </>
