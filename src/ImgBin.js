@@ -23,6 +23,7 @@ const ImgBin = props => {
 
   const URLImage = ({ image }) => {
     const [img] = useImage(image.src);
+
     return (
       <Image
         image={img}
@@ -47,21 +48,50 @@ const ImgBin = props => {
     console.log("New State: ", images)
   }
 
-  
 
-  const saveBoard = () => {
+  const prepImgsForSave = () => {
+    images.forEach(img => findImgUrlID(img))
+  }
 
-    const formData = new FormData()
-    formData.append('board_state', JSON.stringify(images))
+  const findImgUrlID = stateImg => {
+    const formData = new FormData() 
+    fetch('http://localhost:3000/images', {
+      method: "GET"
+    })
+      .then(resp => resp.json())
+      .then(imgArray => {
+        const stateImgId = imgArray.find(image => image.src === stateImg.src).id
+        findBoardImageId(stateImgId, stateImg)
+      })
+  }
 
-    fetch('http://localhost:3000/boards/1', {
+  const findBoardImageId = (imgId, stateImg) => {
+    console.log(imgId)
+    fetch('http://localhost:3000/board_images/', {
+      method: "GET"
+    })
+      .then(resp => resp.json())
+      .then(boardImgArray => {
+        const boardImgId = boardImgArray.find(boardImg => boardImg.id === imgId).id
+        saveImgBoardState(boardImgId, stateImg)
+      })
+  }
+
+  const saveImgBoardState = (boardImgId, stateImg) => {
+    // const formData = new FormData()
+    // formData.append('board_state', JSON.stringify(images))
+
+    fetch(`http://localhost:3000/board_images/${boardImgId}`, {
       method: "PATCH",
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
         // Authorization: `Bearer ${token}`,
       },
-      body: formData
+      body: JSON.stringify({
+        x: stateImg.x,
+        y: stateImg.y
+      })
     })
       .then(resp => resp.json())
       .then("PATCH: ", console.log)
@@ -78,7 +108,7 @@ const ImgBin = props => {
 						alt=""
 						width="125vw"
 						id={img.id}
-						src={img.img_url}
+						src={img.src}
             draggable="true"
             // onDblClick={onSelect}
 						onDragStart={(e) => {
@@ -121,7 +151,7 @@ const ImgBin = props => {
 				}}
 				onDragOver={(e) => e.preventDefault()}
 			>
-        <Button label="save" onClick={saveBoard}>Save Board</Button>
+        <Button label="save" onClick={prepImgsForSave}>Save Board</Button>
 				<Stage
 					width={window.innerWidth}
 					height={window.innerHeight}
@@ -130,7 +160,7 @@ const ImgBin = props => {
         >
 					<Layer>
 						{images.map((image) => {
-              return <URLImage image={image} />;
+              return <URLImage key={image.id} image={image} />;
 						})}
 					</Layer>
 				</Stage>

@@ -16,6 +16,8 @@ export default function UploadPane(props) {
     const formData = new FormData()
     formData.append('img_src', image)
     
+    console.log("formData: ", formData)
+
     fetch('http://localhost:3000/images', {
       method: "POST",
       headers: {

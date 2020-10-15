@@ -10,12 +10,15 @@ class BoardContainer extends React.Component {
     title: ''
   }
 
-  componentDidMount() {
-    const token = localStorage.getItem('token')
+
+   
+
+    componentDidMount() {
+       // const token = localStorage.getItem('token')
     fetch('http://localhost:3000/boards', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      // headers: {
+      //   Authorization: `Bearer ${token}`
+      // }
     })
       .then(resp => resp.json())
       .then(boards => {
@@ -26,15 +29,16 @@ class BoardContainer extends React.Component {
       }
       )
   }
+  
 
   renderBoards = () => {
     const boards = this.state.boardsArray
     if (boards.length > 0) {
       return boards.map(board => {
+        console.log("renderBoard: ", board.id)
         return (
-          <div style={boardDiv}>
+          <div id={board.id} style={boardDiv}>
             <BoardsList key={board.id} title={board.title} removeBoard={this.removeBoard} />
-            <Button id={board.id} onClick={this.removeBoard}>X</Button>
           </div>
         )
       })
@@ -42,8 +46,21 @@ class BoardContainer extends React.Component {
   }
   
   removeBoard = (e) => {
-    console.log('removeBoard', e.target.id)
+    const boardId = e.target.parentElement.parentElement.parentElement.id
+    fetch(`http://localhost:3000/boards/${boardId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      }
+    })
+    const newArray = this.state.boardsArray.filter(stateBoard => stateBoard.id !== parseInt(boardId))
+    console.log(boardId)
+    this.setState({
+      boardsArray: newArray
+    })
   }
+
 
   submitHandler = e => {
     e.preventDefault()
@@ -80,7 +97,9 @@ class BoardContainer extends React.Component {
 
 
   render() {
-    console.log(this.state.title)
+    console.log(this.state.boardsArray)
+
+    // console.log(this.state.title)
     return (
       <>
         <Typography>Create Board</Typography>
