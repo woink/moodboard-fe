@@ -2,14 +2,23 @@ import React from 'react'
 import UploadPane from './UploadPane'
 import ImgBin from './ImgBin'
 import { baseURL } from './constants'
+import Drawer from './Drawer'
+import zIndex from '@material-ui/core/styles/zIndex'
 
 class Main extends React.Component {
   state = {
     // user: this.props.user,
     images: [],
-    boardImages: []
-  };
+    boardImages: [],
+    board: 1
+  }
 
+  loadBoard = id => {
+    console.log(parseInt(id))
+    this.setState({
+      board: parseInt(id)
+    })
+  }
 
   componentDidUpdate(prevProps) {
     if (this.props.images !== prevProps.images) {
@@ -31,7 +40,7 @@ class Main extends React.Component {
         });
       });
     
-    fetch(`http://localhost:3000/boards/${this.props.board}/board_images`, {
+    fetch(`http://localhost:3000/boards/${this.state.board}/board_images`, {
       method: "GET",
     })
       .then(resp => resp.json())
@@ -42,13 +51,13 @@ class Main extends React.Component {
     })
   };
 
-  imgUploaded = (obj) => {
+  imgUploaded = obj => {
     this.setState(() => (
       { images: [...this.state.images, obj] }
     ))
   }
 
-  removeImage = (e) => {
+  removeImage = e => {
     const imgId = e.target.parentElement.id
     // const token = localStorage.getItem('token')
     fetch(`http://localhost:3000/images/${imgId}`, {
@@ -65,7 +74,7 @@ class Main extends React.Component {
   }
 
   findImageBoardId = imgId => {
-    fetch(`http://localhost:3000/boards/${this.props.board}/board_images`, {
+    fetch(`http://localhost:3000/boards/${this.state.board}/board_images`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +90,7 @@ class Main extends React.Component {
   }
 
   removeBoardImage = (stateBoardImgId, imgId) => {
-    fetch(`http://localhost:3000/boards/${this.props.board}/board_images/${parseInt(stateBoardImgId)}`, {
+    fetch(`http://localhost:3000/boards/${this.state.board}/board_images/${parseInt(stateBoardImgId)}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -92,17 +101,17 @@ class Main extends React.Component {
     this.setState({
         images: newImgArray
       })
-      
   }
 
 
   render() {
-    console.log("BoardImages State: ", this.props.board)
+    console.log("Board State: ", this.state.board)
     return (
       <>
+        <Drawer loadBoard={this.loadBoard}/>
 				<div>
           <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
-          <ImgBin board={this.props.board} boardImages={this.state.boardImages} images={this.state.images} removeImage={this.removeImage}/>
+          <ImgBin board={this.state.board} boardImages={this.state.boardImages} images={this.state.images} removeImage={this.removeImage}/>
         
 				</div>
       </>

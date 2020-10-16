@@ -10,23 +10,22 @@ class BoardContainer extends React.Component {
     title: ''
   }
 
-    componentDidMount() {
-       // const token = localStorage.getItem('token')
-    fetch('http://localhost:3000/boards', {
-      // headers: {
-      //   Authorization: `Bearer ${token}`
-      // }
+  componentDidMount() {
+      // const token = localStorage.getItem('token')
+  fetch('http://localhost:3000/boards', {
+    // headers: {
+    //   Authorization: `Bearer ${token}`
+    // }
+  })
+    .then(resp => resp.json())
+    .then(boards => {
+      console.log("In get request: ", boards)
+      this.setState({
+        boardsArray: boards
+      })
     })
-      .then(resp => resp.json())
-      .then(boards => {
-        console.log("In get request: ", boards)
-        this.setState({
-          boardsArray: boards
-        })
-      }
-      )
   }
-
+  
   renderBoards = () => {
     const boards = this.state.boardsArray
     if (boards.length > 0) {
@@ -34,7 +33,7 @@ class BoardContainer extends React.Component {
         console.log("renderBoard: ", board.id)
         return (
           <div id={board.id} style={boardDiv}>
-            <BoardsList key={board.id} title={board.title} loadBoard={this.loadBoard} removeBoard={this.removeBoard} />
+            <BoardsList key={board.id} title={board.title} loadBoard={this.props.loadBoard} removeBoard={this.removeBoard} />
           </div>
         )
       })
@@ -60,13 +59,13 @@ class BoardContainer extends React.Component {
   submitHandler = e => {
     e.preventDefault()
 
-    const token = localStorage.getItem('token')
+    // const token = localStorage.getItem('token')
     fetch('http://localhost:3000/boards', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         user_id: 1,
@@ -90,9 +89,12 @@ class BoardContainer extends React.Component {
     })
   }
 
+  // loadBoard = () => {
+  //   console.log('hit')
+  // }
 
   render() {
-    console.log(this.state.boardsArray)
+    console.log("BoardContainer :", this.props.loadBoard)
 
     // console.log(this.state.title)
     return (

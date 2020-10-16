@@ -30,8 +30,8 @@ class SignUp extends React.Component {
 			username: this.state.username,
 			password: this.state.password,
 			avatar: this.state.avatar,
-		});
-	};
+		})
+	}
 
 	render() {
 		return (

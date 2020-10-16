@@ -4,7 +4,6 @@ import { render } from '@testing-library/react';
 import { Image, Stage, Layer, Transformer, node } from 'react-konva';
 import useImage from 'use-image';
 import { Button, Container } from '@material-ui/core';
-import { ContactSupportOutlined } from '@material-ui/icons';
 
 
 const ImgBin = props => {
@@ -13,7 +12,9 @@ const ImgBin = props => {
   const [images, setImages] = useState([]);
   const [stageWidth] = useState([window.innerWidth / 1.41]);
 
-  
+  // 
+  // LOAD BOARDS
+  // 
   useEffect(() => {
     fetch(`http://localhost:3000/boards/${props.board}/board_images`)
       .then(resp => resp.json())
@@ -33,7 +34,7 @@ const ImgBin = props => {
     const findMatches = (imgList, boardImgArray) => {
       let newState = []
       let i = 0
-      
+
       while (i < boardImgArray.length) {
         const imgMatch = imgList.find(img => img.id === boardImgArray[i].image_id).src
         const newStateObj = {
@@ -48,22 +49,11 @@ const ImgBin = props => {
       setImages(newState)
     }
   }, [])
-
-
-
-
-  const handleDragEnd = (e) => {
-    const stateIdx = images.findIndex(img => img.src === e.target.attrs.image.currentSrc)
-    const newPos = e.target._lastPos
-    newPos.src = e.target.attrs.image.currentSrc
-    images[stateIdx] = newPos
-    console.log("New State: ", images)
-  }
+// ////////////////////////////////////
 
   // 
   // SAVE IMAGES W/ LOCATION
   // 
-
   const prepImgsForSave = () => {
     images.forEach(img => findImgUrlID(img))
   }
@@ -113,10 +103,14 @@ const ImgBin = props => {
     }
   // ////////////////////////////////////
 
-  // Load state
-
-
-
+  const handleDragEnd = (e) => {
+    const stateIdx = images.findIndex(img => img.src === e.target.attrs.image.currentSrc)
+    const newPos = e.target._lastPos
+    newPos.src = e.target.attrs.image.currentSrc
+    images[stateIdx] = newPos
+    console.log("New State: ", images)
+  }
+ 
   console.log("current board: ", props.board)
 
 

@@ -5,10 +5,9 @@ import Login from './Login'
 import Drawer from './Drawer'
 import { Switch, Route} from 'react-router-dom'
 class App extends React.Component {
-  state = {
-    board: 1
+  // state = {
 		// user: null,
-  };
+  // };
 
   // componentDidMount(){
   //   const token = localStorage.getItem('token')
@@ -50,14 +49,17 @@ class App extends React.Component {
       })
   }
 
+
+
   render() {
+    console.log("App State: ", this.state)
 		return (
       <>
         {/* { this.state.user ? */}
           <>
-            <Drawer />
             
-          <Route path='/' exact render={() => <Main board={this.state.board}/>}/>
+            
+          <Route path='/' exact render={() => <Main/>}/>
             
             {/* user={this.state.user} */}
             

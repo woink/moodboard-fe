@@ -86,8 +86,7 @@ export default function PersistentDrawerLeft(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  
+  console.log("Drawer props: ", props.loadBoard)
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -127,7 +126,7 @@ export default function PersistentDrawerLeft(props) {
           </IconButton>
         </div>
         <Divider />
-        <BoardContainer />
+        <BoardContainer loadBoard={props.loadBoard}/>
       </Drawer>
      </div>
   );
