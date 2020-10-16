@@ -86,7 +86,6 @@ export default function PersistentDrawerLeft(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-  console.log("Drawer props: ", props.loadBoard)
   return (
     <div className={classes.root}>
       <CssBaseline />

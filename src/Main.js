@@ -3,7 +3,6 @@ import UploadPane from './UploadPane'
 import ImgBin from './ImgBin'
 import { baseURL } from './constants'
 import Drawer from './Drawer'
-import zIndex from '@material-ui/core/styles/zIndex'
 
 class Main extends React.Component {
   state = {
@@ -14,17 +13,10 @@ class Main extends React.Component {
   }
 
   loadBoard = id => {
-    console.log(parseInt(id))
     this.setState({
       board: parseInt(id)
     })
   }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.images !== prevProps.images) {
-      console.log("updated")
-    }
-  } 
  
   componentDidMount = () => {
     // const token = localStorage.getItem('token')
@@ -34,19 +26,18 @@ class Main extends React.Component {
     })
       .then((resp) => resp.json())
       .then((upImages) => {
-        console.log("Get Request: ", upImages)
         this.setState({
           images: upImages,
         });
       });
     
-    fetch(`http://localhost:3000/boards/${this.state.board}/board_images`, {
+    fetch(`http://localhost:3000/boards/${this.state.board}/`, {
       method: "GET",
     })
       .then(resp => resp.json())
       .then(boardImgs => {
         this.setState({
-        boardImages: boardImgs
+        boardImages: boardImgs.board_images
       })
     })
   };
@@ -83,7 +74,6 @@ class Main extends React.Component {
     })
       .then(resp => resp.json())
       .then(boardImgArray => {
-        console.log("findImageBoardId: ", boardImgArray)
         const stateBoardImgId = boardImgArray.find(boardImg => boardImg.image_id === parseInt(imgId)).id
         this.removeBoardImage(stateBoardImgId, imgId)
       })
@@ -103,14 +93,12 @@ class Main extends React.Component {
       })
   }
 
-
   render() {
-    console.log("Board State: ", this.state.board)
     return (
       <>
         <Drawer loadBoard={this.loadBoard}/>
 				<div>
-          <UploadPane user={this.state.user} imgUploaded={this.imgUploaded} />
+          <UploadPane board={this.state.board} user={this.state.user} imgUploaded={this.imgUploaded} />
           <ImgBin board={this.state.board} boardImages={this.state.boardImages} images={this.state.images} removeImage={this.removeImage}/>
         
 				</div>

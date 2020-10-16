@@ -95,7 +95,6 @@ class BoardContainer extends React.Component {
 
   render() {
     console.log("BoardContainer :", this.props.loadBoard)
-
     // console.log(this.state.title)
     return (
       <>

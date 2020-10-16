@@ -5,135 +5,132 @@ import { Image, Stage, Layer, Transformer, node } from 'react-konva';
 import useImage from 'use-image';
 import { Button, Container } from '@material-ui/core';
 
+const ImgBin = (props) => {
+	const dragUrl = useRef();
+	const stageRef = useRef();
+	const [images, setImages] = useState([]);
+	const [stageWidth] = useState([window.innerWidth / 1.41]);
 
-const ImgBin = props => {
-  const dragUrl = useRef();
-  const stageRef = useRef();
-  const [images, setImages] = useState([]);
-  const [stageWidth] = useState([window.innerWidth / 1.41]);
+	//
+	// LOAD BOARDS
+	//
+	useEffect(() => {
+		setImages([]);
+		fetch(`http://localhost:3000/boards/${props.board}`)
+			.then((resp) => resp.json())
+			.then((boardImgArray) => {
+				findImgUrlID(boardImgArray.board_images);
+			});
+		const findImgUrlID = (boardImgArray) => {
+			fetch(`http://localhost:3000/images`)
+				.then((resp) => resp.json())
+				.then((imgList) => {
+					findMatches(imgList, boardImgArray);
+				});
+		};
 
-  // 
-  // LOAD BOARDS
-  // 
-  useEffect(() => {
-    fetch(`http://localhost:3000/boards/${props.board}/board_images`)
-      .then(resp => resp.json())
-      .then(boardImgArray => {
-        console.log("First Fetch: ", boardImgArray)
-          findImgUrlID(boardImgArray)
-      }) 
-    
-    const findImgUrlID = boardImgArray => {
-      fetch(`http://localhost:3000/images`)
-        .then(resp => resp.json())
-        .then(imgList => {
-          findMatches(imgList, boardImgArray)
-        })
-    }
-    
-    const findMatches = (imgList, boardImgArray) => {
-      let newState = []
-      let i = 0
+		const findMatches = (imgList, boardImgArray) => {
+			let newState = [];
+			let i = 0;
+			if (boardImgArray) {
+				while (i < boardImgArray.length) {
+					const imgMatch = imgList.find(
+						(img) => img.id === boardImgArray[i].image_id
+					).src;
+					const newStateObj = {
+						x: boardImgArray[i].x,
+						y: boardImgArray[i].y,
+						src: imgMatch,
+					};
+					newState.push(newStateObj);
+					i++;
+				}
+			}
+			setImages(newState);
+		};
+	}, [props.board]);
+	// ////////////////////////////////////
 
-      while (i < boardImgArray.length) {
-        const imgMatch = imgList.find(img => img.id === boardImgArray[i].image_id).src
-        const newStateObj = {
-          x: boardImgArray[i].x,
-          y: boardImgArray[i].y,
-          src: imgMatch
-        }
-        newState.push(newStateObj)
-        i++
-      }
+	//
+	// SAVE IMAGES W/ LOCATION
+	//
+	const prepImgsForSave = () => {
+		images.forEach((img) => findImgUrlID(img));
+	};
 
-      setImages(newState)
-    }
-  }, [])
-// ////////////////////////////////////
+	const findImgUrlID = (stateImg) => {
+		const formData = new FormData();
+		fetch('http://localhost:3000/images', {
+			method: 'GET',
+		})
+			.then((resp) => resp.json())
+			.then((imgArray) => {
+				const stateImgId = imgArray.find((image) => image.src === stateImg.src)
+					.id;
+				findBoardImageId(stateImgId, stateImg);
+			});
+	};
 
-  // 
-  // SAVE IMAGES W/ LOCATION
-  // 
-  const prepImgsForSave = () => {
-    images.forEach(img => findImgUrlID(img))
-  }
+	const findBoardImageId = (imgId, stateImg) => {
+		fetch('http://localhost:3000/board_images/', {
+			method: 'GET',
+		})
+			.then((resp) => resp.json())
+			.then((boardImgArray) => {
+				const boardImgId = boardImgArray.find(
+					(boardImg) => boardImg.id === imgId
+				).id;
+				saveImgBoardState(boardImgId, stateImg);
+			});
+	};
 
-  const findImgUrlID = stateImg => {
-    const formData = new FormData() 
-    fetch('http://localhost:3000/images', {
-      method: "GET"
-    })
-      .then(resp => resp.json())
-      .then(imgArray => {
-        const stateImgId = imgArray.find(image => image.src === stateImg.src).id
-        findBoardImageId(stateImgId, stateImg)
-      })
-  }
+	const saveImgBoardState = (boardImgId, stateImg) => {
+		// const formData = new FormData()
+		// formData.append('board_state', JSON.stringify(images))
 
-  const findBoardImageId = (imgId, stateImg) => {
-    console.log(imgId)
-    fetch('http://localhost:3000/board_images/', {
-      method: "GET"
-    })
-      .then(resp => resp.json())
-      .then(boardImgArray => {
-        const boardImgId = boardImgArray.find(boardImg => boardImg.id === imgId).id
-        saveImgBoardState(boardImgId, stateImg)
-      })
-  }
+		fetch(`http://localhost:3000/board_images/${boardImgId}`, {
+			method: 'PATCH',
+			headers: {
+				'Content-Type': 'application/json',
+				accepts: 'application/json',
+				// Authorization: `Bearer ${token}`,
+			},
+			body: JSON.stringify({
+				x: stateImg.x,
+				y: stateImg.y,
+			}),
+		})
+			.then((resp) => resp.json())
+	};
+	// ////////////////////////////////////
 
-  const saveImgBoardState = (boardImgId, stateImg) => {
-    // const formData = new FormData()
-    // formData.append('board_state', JSON.stringify(images))
+	const handleDragEnd = (e) => {
+		const stateIdx = images.findIndex(
+			(img) => img.src === e.target.attrs.image.currentSrc
+		);
+		const newPos = e.target._lastPos;
+		newPos.src = e.target.attrs.image.currentSrc;
+		images[stateIdx] = newPos;
+	};
 
-    fetch(`http://localhost:3000/board_images/${boardImgId}`, {
-      method: "PATCH",
-      headers: {
-        'Content-Type': 'application/json',
-        accepts: 'application/json',
-        // Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        x: stateImg.x,
-        y: stateImg.y
-      })
-    })
-      .then(resp => resp.json())
-      .then("PATCH: ", console.log)
-    }
-  // ////////////////////////////////////
+	const URLImage = ({ image }) => {
+		const [img] = useImage(image.src);
 
-  const handleDragEnd = (e) => {
-    const stateIdx = images.findIndex(img => img.src === e.target.attrs.image.currentSrc)
-    const newPos = e.target._lastPos
-    newPos.src = e.target.attrs.image.currentSrc
-    images[stateIdx] = newPos
-    console.log("New State: ", images)
-  }
- 
-  console.log("current board: ", props.board)
-
-
-  console.log("Images State: ", images)
-
-  const URLImage = ({ image }) => {
-    const [img] = useImage(image.src);
-
-    return (
-      <Image
-        image={img}
-        x={image.x}
-        y={image.y}
-        // use id to remove from state
-        id={image.id}
-        // use offset to set origin to the center of the image
-        offsetX={img ? img.width / 2 : 0}
-        offsetY={img ? img.height / 2 : 0}
-        draggable="true"
-        onDragEnd={handleDragEnd}
-      />
-    )
-  }
+		return (
+			<Image
+				image={img}
+				x={image.x}
+				y={image.y}
+				// use id to remove from state
+				id={image.id}
+				// use offset to set origin to the center of the image
+				offsetX={img ? img.width / 2 : 0}
+				offsetY={img ? img.height / 2 : 0}
+				draggable="true"
+				onDragEnd={handleDragEnd}
+			/>
+		);
+	};
 
 	const renderImages = () => {
 		return props.images.map((img) => {
@@ -144,13 +141,11 @@ const ImgBin = props => {
 						width="125vw"
 						id={img.id}
 						src={img.src}
-            draggable="true"
-            // onDblClick={onSelect}
+						draggable="true"
+						// onDblClick={onSelect}
 						onDragStart={(e) => {
-              dragUrl.current = e.target.src;
-            console.log("Drag Start: ", images)
-            }}
-            
+							dragUrl.current = e.target.src;
+						}}
 					/>
 					<Button
 						onClick={props.removeImage}
@@ -179,30 +174,32 @@ const ImgBin = props => {
 						images.concat([
 							{
 								...stageRef.current.getPointerPosition(),
-                src: dragUrl.current,
+								src: dragUrl.current,
 							},
 						])
 					);
 				}}
 				onDragOver={(e) => e.preventDefault()}
 			>
-        <Button label="save" onClick={prepImgsForSave}>Save Board</Button>
+				<Button label="save" onClick={prepImgsForSave}>
+					Save Board
+				</Button>
 				<Stage
 					width={window.innerWidth}
 					height={window.innerHeight}
 					style={stage}
 					ref={stageRef}
-        >
+				>
 					<Layer>
 						{images.map((image) => {
-              return <URLImage key={image.id} image={image} />;
+							return <URLImage key={image.id} image={image} />;
 						})}
 					</Layer>
 				</Stage>
 			</div>
 		</div>
 	);
-}
+};
 
 export default ImgBin;
 

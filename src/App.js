@@ -39,7 +39,6 @@ class App extends React.Component {
     })
       .then(resp => resp.json())
       .then(theUser => {
-        console.log(theUser)
         // if(theUser.message !== 'Invalid username or password') {
           localStorage.setItem('token', theUser.jwt)
           this.setState({
@@ -52,7 +51,6 @@ class App extends React.Component {
 
 
   render() {
-    console.log("App State: ", this.state)
 		return (
       <>
         {/* { this.state.user ? */}
