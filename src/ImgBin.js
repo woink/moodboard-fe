@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './style.css';
-import { render } from '@testing-library/react';
-import { Image, Stage, Layer, Transformer, node } from 'react-konva';
+import { Image, Stage, Layer, Transformer } from 'react-konva';
 import useImage from 'use-image';
-import { Button, Container } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
 const ImgBin = (props) => {
 	const dragUrl = useRef();
+	const dragId = useRef();
 	const stageRef = useRef();
 	const [images, setImages] = useState([]);
 	const [stageWidth] = useState([window.innerWidth / 1.41]);
@@ -25,6 +25,7 @@ const ImgBin = (props) => {
 			fetch(`http://localhost:3000/images`)
 				.then((resp) => resp.json())
 				.then((imgList) => {
+					console.log('FINDIMGURL: ', boardImgArray);
 					findMatches(imgList, boardImgArray);
 				});
 		};
@@ -36,11 +37,14 @@ const ImgBin = (props) => {
 				while (i < boardImgArray.length) {
 					const imgMatch = imgList.find(
 						(img) => img.id === boardImgArray[i].image_id
-					).src;
+					);
 					const newStateObj = {
 						x: boardImgArray[i].x,
 						y: boardImgArray[i].y,
-						src: imgMatch,
+						src: imgMatch.src,
+						id: imgMatch.id,
+						width: boardImgArray[i].width,
+						height: boardImgArray[i].height
 					};
 					newState.push(newStateObj);
 					i++;
@@ -51,6 +55,7 @@ const ImgBin = (props) => {
 	}, [props.board]);
 	// ////////////////////////////////////
 
+	console.log('Images State: ', images);
 	//
 	// SAVE IMAGES W/ LOCATION
 	//
@@ -81,6 +86,7 @@ const ImgBin = (props) => {
 					(boardImg) => boardImg.id === imgId
 				).id;
 				saveImgBoardState(boardImgId, stateImg);
+				console.log("stateImg: ", stateImg)
 			});
 	};
 
@@ -98,42 +104,103 @@ const ImgBin = (props) => {
 			body: JSON.stringify({
 				x: stateImg.x,
 				y: stateImg.y,
+				width: stateImg.width,
+				height: stateImg.height
 			}),
-		})
-			.then((resp) => resp.json())
+		}).then((resp) => resp.json());
 	};
 	// ////////////////////////////////////
 
-	const handleDragEnd = (e) => {
-		const stateIdx = images.findIndex(
-			(img) => img.src === e.target.attrs.image.currentSrc
-		);
-		const newPos = e.target._lastPos;
-		newPos.src = e.target.attrs.image.currentSrc;
-		images[stateIdx] = newPos;
-	};
-
-	const URLImage = ({ image }) => {
+	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
 		const [img] = useImage(image.src);
 
+		const shapeRef = useRef();
+		const trRef = useRef();
+
+		useEffect(() => {
+			if (isSelected) {
+				console.log('clicked on image', trRef.current);
+				console.log('show shapeRef: ', shapeRef.current)
+				// attach transformer
+				trRef.current.setNode(shapeRef.current);
+				trRef.current.getLayer().batchDraw();
+			}
+		}, [isSelected]);
+		console.log("ShapeProps: ", shapeProps)
+		useLayoutEffect(() => {
+			shapeRef.current.cache();
+		}, [shapeProps, img, isSelected]);
+
 		return (
-			<Image
-				image={img}
-				x={image.x}
-				y={image.y}
-				// use id to remove from state
-				id={image.id}
-				// use offset to set origin to the center of the image
-				offsetX={img ? img.width / 2 : 0}
-				offsetY={img ? img.height / 2 : 0}
-				draggable="true"
-				onDragEnd={handleDragEnd}
-			/>
+			<>
+				<Image
+					image={img}
+					onClick={onSelect}
+					ref={shapeRef}
+					{...shapeProps}
+					x={image.x}
+					y={image.y}
+					// width={500}
+					// height={500}
+					id='rect1'
+					// use id to remove from state
+					id={image.id}
+					// use offset to set origin to the center of the image
+					// offsetX={img ? img.width / 2 : 0}
+					// offsetY={img ? img.height / 2 : 0}
+					draggable
+					onDragEnd={(e) => {
+						const stateIdx = images.findIndex(
+							(img) => img.src === e.target.attrs.image.currentSrc
+						);
+						const newPos = e.target._lastPos;
+						newPos.src = e.target.attrs.image.currentSrc;
+						images[stateIdx] = newPos;
+						onChange({
+							...shapeProps,
+							x: e.target.x(),
+							y: e.target.y()
+						})
+					}}
+					onTransformEnd={(e) => {
+						const node = shapeRef.current
+						const scaleX = node.scaleX()
+						const scaleY = node.scaleY()
+					
+						node.scaleX(1)
+						node.scaleY(1)
+						node.width(Math.max(5, node.width() * scaleX))
+						node.height(Math.max(node.height() * scaleY))
+							
+						onChange({
+							...shapeProps,
+							x: node.x(),
+							y: node.y(),
+							// set minimal value
+							width: node.width(),
+							height: node.height()
+						})
+					}}
+				/>
+				{isSelected && (
+					<Transformer
+						ref={trRef}
+						boundBoxFunc={(oldBox, newBox) => {
+							// limit resize
+							if (newBox.width < 5 || newBox.height < 5) {
+								return oldBox;
+							}
+							return newBox;
+						}}
+					/>
+				)}
+			</>
 		);
 	};
 
 	const renderImages = () => {
 		return props.images.map((img) => {
+			console.log('Image ID: ', img.id);
 			return (
 				<>
 					<img
@@ -141,10 +208,11 @@ const ImgBin = (props) => {
 						width="125vw"
 						id={img.id}
 						src={img.src}
-						draggable="true"
+						// draggable
 						// onDblClick={onSelect}
 						onDragStart={(e) => {
 							dragUrl.current = e.target.src;
+							dragId.current = parseInt(e.target.id);
 						}}
 					/>
 					<Button
@@ -160,6 +228,19 @@ const ImgBin = (props) => {
 		});
 	};
 
+	const initialRectangles = [
+		{
+			x: 10,
+			y: 10,
+			width: 100,
+			height: 100,
+			scaleX: 1,
+			scaleY: 1,
+			id: 'rect1',
+		},
+	];
+
+	const [selectedId, selectShape] = useState(null);
 	return (
 		<div>
 			<br />
@@ -175,6 +256,7 @@ const ImgBin = (props) => {
 							{
 								...stageRef.current.getPointerPosition(),
 								src: dragUrl.current,
+								id: dragId.current,
 							},
 						])
 					);
@@ -182,17 +264,40 @@ const ImgBin = (props) => {
 				onDragOver={(e) => e.preventDefault()}
 			>
 				<Button label="save" onClick={prepImgsForSave}>
-					Save Board
+					Save Changes
 				</Button>
 				<Stage
 					width={window.innerWidth}
 					height={window.innerHeight}
 					style={stage}
 					ref={stageRef}
+					onMouseDown={(e) => {
+						const clickedOnEmpty = e.target === e.target.getStage();
+						if (clickedOnEmpty) {
+							console.log('clicked on empty')
+							selectShape(null);
+						}
+					}}
 				>
 					<Layer>
-						{images.map((image) => {
-							return <URLImage key={image.id} image={image} />;
+						{images.map((img, i) => {
+							console.log(img);
+							return (
+								<URLImage
+									key={i}
+									image={img}
+									shapeProps={img}
+									isSelected={img.id === selectedId}
+									onSelect={() => {
+										selectShape(img.id);
+									}}
+									onChange={(newAttrs) => {
+										const rects = images.slice();
+										rects[i] = newAttrs;
+										setImages(rects);
+									}}
+								/>
+							);
 						})}
 					</Layer>
 				</Stage>
