@@ -15,7 +15,7 @@ const ImgBin = (props) => {
 	// LOAD BOARDS
 	//
 	useEffect(() => {
-		setImages([]);
+		// setImages([]);
 		fetch(`http://localhost:3000/boards/${props.board}`)
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
@@ -44,7 +44,7 @@ const ImgBin = (props) => {
 						src: imgMatch.src,
 						id: imgMatch.id,
 						width: boardImgArray[i].width,
-						height: boardImgArray[i].height
+						height: boardImgArray[i].height,
 					};
 					newState.push(newStateObj);
 					i++;
@@ -60,20 +60,7 @@ const ImgBin = (props) => {
 	// SAVE IMAGES W/ LOCATION
 	//
 	const prepImgsForSave = () => {
-		images.forEach((img) => findImgUrlID(img));
-	};
-
-	const findImgUrlID = (stateImg) => {
-		const formData = new FormData();
-		fetch('http://localhost:3000/images', {
-			method: 'GET',
-		})
-			.then((resp) => resp.json())
-			.then((imgArray) => {
-				const stateImgId = imgArray.find((image) => image.src === stateImg.src)
-					.id;
-				findBoardImageId(stateImgId, stateImg);
-			});
+		images.forEach((img) => findBoardImageId(img.id, img));
 	};
 
 	const findBoardImageId = (imgId, stateImg) => {
@@ -82,18 +69,36 @@ const ImgBin = (props) => {
 		})
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
-				const boardImgId = boardImgArray.find(
-					(boardImg) => boardImg.id === imgId
-				).id;
-				saveImgBoardState(boardImgId, stateImg);
-				console.log("stateImg: ", stateImg)
+				const boardImage = boardImgArray.find(
+					(boardImg) => (boardImg.image_id === imgId) && (boardImg.board_id === props.board)
+				);
+				if (boardImage) {
+					saveImgBoardState(boardImage.id, stateImg);
+				} else {
+					createImageAssociation(imgId, stateImg)
+				}
 			});
 	};
 
-	const saveImgBoardState = (boardImgId, stateImg) => {
-		// const formData = new FormData()
-		// formData.append('board_state', JSON.stringify(images))
+	const createImageAssociation = (imgId, stateImg) => {
+		fetch('http://localhost:3000/board_images/', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							accepts: 'application/json',
+						},
+						body: JSON.stringify({
+							board_id: props.board,
+							image_id: imgId,
+							x: stateImg.x,
+							y: stateImg.y,
+							width: stateImg.width,
+							height: stateImg.height,
+						}),
+					});
+	}
 
+	const saveImgBoardState = (boardImgId, stateImg) => {
 		fetch(`http://localhost:3000/board_images/${boardImgId}`, {
 			method: 'PATCH',
 			headers: {
@@ -105,33 +110,32 @@ const ImgBin = (props) => {
 				x: stateImg.x,
 				y: stateImg.y,
 				width: stateImg.width,
-				height: stateImg.height
+				height: stateImg.height,
 			}),
-		}).then((resp) => resp.json());
+		})
+			.then((resp) => resp.json())
+			.then(console.log);
 	};
 	// ////////////////////////////////////
 
-
 	const downloadURI = (uri, name) => {
-		const link = document.createElement('a')
-		link.download = name
-		link.href = uri
-		document.body.appendChild(link)
-		link.click()
-		document.body.removeChild(link)
-	}
+		const link = document.createElement('a');
+		link.download = name;
+		link.href = uri;
+		document.body.appendChild(link);
+		link.click();
+		document.body.removeChild(link);
+	};
 
-	const downloadBoard = e => {
-		e.preventDefault()
+	const downloadBoard = (e) => {
+		e.preventDefault();
 		const dataURL = stageRef.current.toDataURL({
 			mimeType: 'image/jpeg',
 			quality: 0,
-			pixelRatio: 2
-		})
-		downloadURI(dataURL, 'test')
-		// console.log(stageRef.current.toDataURL())
-	}
-
+			pixelRatio: 2,
+		});
+		downloadURI(dataURL, 'MoodBoard');
+	};
 
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
 		const [img] = useImage(image.src, 'Anonymous');
@@ -142,13 +146,13 @@ const ImgBin = (props) => {
 		useEffect(() => {
 			if (isSelected) {
 				console.log('clicked on image', trRef.current);
-				console.log('show shapeRef: ', shapeRef.current)
+				console.log('show shapeRef: ', shapeRef.current);
 				// attach transformer
 				trRef.current.setNode(shapeRef.current);
 				trRef.current.getLayer().batchDraw();
 			}
 		}, [isSelected]);
-		console.log("ShapeProps: ", shapeProps)
+		console.log('ShapeProps: ', shapeProps);
 		useLayoutEffect(() => {
 			shapeRef.current.cache();
 		}, [shapeProps, img, isSelected]);
@@ -164,12 +168,9 @@ const ImgBin = (props) => {
 					y={image.y}
 					// width={500}
 					// height={500}
-					id='rect1'
+					id="rect1"
 					// use id to remove from state
 					id={image.id}
-					// use offset to set origin to the center of the image
-					// offsetX={img ? img.width / 2 : 0}
-					// offsetY={img ? img.height / 2 : 0}
 					draggable
 					onDragEnd={(e) => {
 						const stateIdx = images.findIndex(
@@ -181,30 +182,29 @@ const ImgBin = (props) => {
 						onChange({
 							...shapeProps,
 							x: e.target.x(),
-							y: e.target.y()
-						})
+							y: e.target.y(),
+						});
 					}}
-
 					// changing the scale but storing as width and height
-					onTransformEnd={e => {
-						const node = shapeRef.current
-						const scaleX = node.scaleX()
-						const scaleY = node.scaleY()
-					
+					onTransformEnd={(e) => {
+						const node = shapeRef.current;
+						const scaleX = node.scaleX();
+						const scaleY = node.scaleY();
+
 						// set scale back
-						node.scaleX(1)
-						node.scaleY(1)
-						node.width(Math.max(5, node.width() * scaleX))
-						node.height(Math.max(node.height() * scaleY))
-							
+						node.scaleX(1);
+						node.scaleY(1);
+						node.width(Math.max(5, node.width() * scaleX));
+						node.height(Math.max(node.height() * scaleY));
+
 						onChange({
 							...shapeProps,
 							x: node.x(),
 							y: node.y(),
 							// set minimal value
 							width: node.width(),
-							height: node.height()
-						})
+							height: node.height(),
+						});
 					}}
 				/>
 				{isSelected && (
@@ -279,7 +279,7 @@ const ImgBin = (props) => {
 				<Button label="save" onClick={prepImgsForSave}>
 					Save Changes
 				</Button>
-				<Button label="download" onClick={downloadBoard} >
+				<Button label="download" onClick={downloadBoard}>
 					Download Board
 				</Button>
 				<Stage
@@ -290,7 +290,7 @@ const ImgBin = (props) => {
 					onMouseDown={(e) => {
 						const clickedOnEmpty = e.target === e.target.getStage();
 						if (clickedOnEmpty) {
-							console.log('clicked on empty')
+							console.log('clicked on empty');
 							selectShape(null);
 						}
 					}}

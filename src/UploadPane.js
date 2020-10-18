@@ -24,19 +24,19 @@ export default function UploadPane(props) {
 		})
 			.then((resp) => resp.json())
 			.then((newImage) => {
-				createBoardAssociation(newImage.id);
+				// createBoardAssociation(newImage.id);
 				props.imgUploaded(newImage);
 			});
 	};
 
 	const createBoardAssociation = (newImageID) => {
-		const token = localStorage.getItem('token');
+		// const token = localStorage.getItem('token');
 		fetch('http://localhost:3000/board_images', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				Authorization: `Bearer ${token}`,
+				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				board_id: props.board,
