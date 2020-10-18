@@ -111,8 +111,30 @@ const ImgBin = (props) => {
 	};
 	// ////////////////////////////////////
 
+
+	const downloadURI = (uri, name) => {
+		const link = document.createElement('a')
+		link.download = name
+		link.href = uri
+		document.body.appendChild(link)
+		link.click()
+		document.body.removeChild(link)
+	}
+
+	const downloadBoard = e => {
+		e.preventDefault()
+		const dataURL = stageRef.current.toDataURL({
+			mimeType: 'image/jpeg',
+			quality: 0,
+			pixelRatio: 2
+		})
+		downloadURI(dataURL, 'test')
+		// console.log(stageRef.current.toDataURL())
+	}
+
+
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
-		const [img] = useImage(image.src);
+		const [img] = useImage(image.src, 'Anonymous');
 
 		const shapeRef = useRef();
 		const trRef = useRef();
@@ -162,11 +184,14 @@ const ImgBin = (props) => {
 							y: e.target.y()
 						})
 					}}
-					onTransformEnd={(e) => {
+
+					// changing the scale but storing as width and height
+					onTransformEnd={e => {
 						const node = shapeRef.current
 						const scaleX = node.scaleX()
 						const scaleY = node.scaleY()
 					
+						// set scale back
 						node.scaleX(1)
 						node.scaleY(1)
 						node.width(Math.max(5, node.width() * scaleX))
@@ -228,18 +253,6 @@ const ImgBin = (props) => {
 		});
 	};
 
-	const initialRectangles = [
-		{
-			x: 10,
-			y: 10,
-			width: 100,
-			height: 100,
-			scaleX: 1,
-			scaleY: 1,
-			id: 'rect1',
-		},
-	];
-
 	const [selectedId, selectShape] = useState(null);
 	return (
 		<div>
@@ -265,6 +278,9 @@ const ImgBin = (props) => {
 			>
 				<Button label="save" onClick={prepImgsForSave}>
 					Save Changes
+				</Button>
+				<Button label="download" onClick={downloadBoard} >
+					Download Board
 				</Button>
 				<Stage
 					width={window.innerWidth}
