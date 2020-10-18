@@ -137,6 +137,16 @@ const ImgBin = (props) => {
 		downloadURI(dataURL, 'MoodBoard');
 	};
 
+	const removeFromBoard = e => {
+		const imgId = parseInt(e.target.parentElement.id)
+		const newArray = images.filter(image => image.id !== imgId)
+		setImages(newArray)
+	}
+
+	const removeFromBin = e => {
+
+	}
+
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
 		const [img] = useImage(image.src, 'Anonymous');
 
@@ -157,6 +167,8 @@ const ImgBin = (props) => {
 			shapeRef.current.cache();
 		}, [shapeProps, img, isSelected]);
 
+
+		console.log("ShapeRef: ", shapeRef)
 		return (
 			<>
 				<Image
@@ -227,7 +239,7 @@ const ImgBin = (props) => {
 		return props.images.map((img) => {
 			console.log('Image ID: ', img.id);
 			return (
-				<>
+				<div style={imgList}>
 					<img
 						alt=""
 						width="125vw"
@@ -241,14 +253,24 @@ const ImgBin = (props) => {
 						}}
 					/>
 					<Button
-						onClick={props.removeImage}
+						onClick={removeFromBin}
 						id={img.id}
 						label="Remove"
 						size="small"
+
 					>
-						Remove
+						Remove from Bin
 					</Button>
-				</>
+					<Button
+						onClick={removeFromBoard}
+						id={img.id}
+						label="Remove"
+						size="small"
+
+					>
+						Remove from Board
+					</Button>
+				</div>
 			);
 		});
 	};
@@ -276,9 +298,11 @@ const ImgBin = (props) => {
 				}}
 				onDragOver={(e) => e.preventDefault()}
 			>
+				
 				<Button label="save" onClick={prepImgsForSave}>
 					Save Changes
 				</Button>
+				<div style={buttonSep}/>
 				<Button label="download" onClick={downloadBoard}>
 					Download Board
 				</Button>
@@ -294,10 +318,11 @@ const ImgBin = (props) => {
 							selectShape(null);
 						}
 					}}
-				>
+					>
+						
 					<Layer>
+						
 						{images.map((img, i) => {
-							console.log(img);
 							return (
 								<URLImage
 									key={i}
@@ -332,9 +357,19 @@ const imgBinDiv = {
 };
 
 const imgs = {
-	overflowX: 'auto',
-	display: 'inline-block',
+	display: 'flex',
+	border: '1px solid orange',
+	overflowX: 'scroll',
+	// width: '40vw'
+	marginRight: '3vw',
+	marginLeft: '3vw',
+	alignItems: 'flex-end'
+	// flexBasis: 'content'
 };
+
+const imgList = {
+	marginRight: '2vw'
+}
 
 const stage = {
 	border: '8px solid green',
@@ -347,3 +382,8 @@ const maybeDiv = {
 	// width: 'window.innerWidth - 1000',
 	// height: 'window.innerHeight',
 };
+
+const buttonSep = {
+	flex: '1'
+}
+

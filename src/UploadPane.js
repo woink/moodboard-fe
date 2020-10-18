@@ -34,9 +34,9 @@ export default function UploadPane(props) {
 	
 	}
 
-	const onDrop = (acceptedFiles) => {
-		console.log(acceptedFiles)
-	}
+	// const onDrop = (acceptedFiles) => {
+	// 	console.log(acceptedFiles)
+	// }
 
 	console.log("Images: ", images)
 

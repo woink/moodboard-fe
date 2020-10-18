@@ -58,14 +58,14 @@ class Main extends React.Component {
         "Accepts": "application/json"
       }
     })
-      .then(() => {
-        this.componentDidMount()
-      })
+      // .then(() => {
+      //   this.componentDidMount()
+      // })
       .then(this.findImageBoardId(imgId))
   }
 
   findImageBoardId = imgId => {
-    fetch(`http://localhost:3000/boards/${this.state.board}/board_images`, {
+    fetch(`http://localhost:3000/board_images`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
