@@ -86,8 +86,6 @@ export default function PersistentDrawerLeft(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -114,7 +112,7 @@ export default function PersistentDrawerLeft(props) {
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
+        variant="static"
         anchor="left"
         open={open}
         classes={{
@@ -127,8 +125,12 @@ export default function PersistentDrawerLeft(props) {
           </IconButton>
         </div>
         <Divider />
-        {/* <BoardContainer user={props.user}/> */}
+        <BoardContainer loadBoard={props.loadBoard}/>
       </Drawer>
      </div>
   );
 }
+
+
+// Add to Board Container when auth is enabled
+// user={props.user}

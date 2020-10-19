@@ -11,30 +11,29 @@ class BoardContainer extends React.Component {
   }
 
   componentDidMount() {
-    const token = localStorage.getItem('token')
-    fetch('http://localhost:3000/boards', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+      // const token = localStorage.getItem('token')
+  fetch('http://localhost:3000/boards', {
+    // headers: {
+    //   Authorization: `Bearer ${token}`
+    // }
+  })
+    .then(resp => resp.json())
+    .then(boards => {
+      console.log("In get request: ", boards)
+      this.setState({
+        boardsArray: boards
+      })
     })
-      .then(resp => resp.json())
-      .then(boards => {
-        console.log("In get request: ", boards)
-        this.setState({
-          boardsArray: boards
-        })
-      }
-      )
   }
-
+  
   renderBoards = () => {
     const boards = this.state.boardsArray
     if (boards.length > 0) {
       return boards.map(board => {
+        console.log("renderBoard: ", board.id)
         return (
-          <div style={boardDiv}>
-            <BoardsList key={board.id} title={board.title} removeBoard={this.removeBoard} />
-            <Button id={board.id} removeBoard={this.removeBoard}>X</Button>
+          <div id={board.id} style={boardDiv}>
+            <BoardsList key={board.id} title={board.title} loadBoard={this.props.loadBoard} removeBoard={this.removeBoard} />
           </div>
         )
       })
@@ -42,22 +41,34 @@ class BoardContainer extends React.Component {
   }
   
   removeBoard = (e) => {
-    console.log('removeBoard', e.target.id)
+    const boardId = e.target.parentElement.parentElement.parentElement.id
+    fetch(`http://localhost:3000/boards/${boardId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "Accepts": "application/json"
+      }
+    })
+    const newArray = this.state.boardsArray.filter(stateBoard => stateBoard.id !== parseInt(boardId))
+    console.log(boardId)
+    this.setState({
+      boardsArray: newArray
+    })
   }
 
   submitHandler = e => {
     e.preventDefault()
 
-    const token = localStorage.getItem('token')
+    // const token = localStorage.getItem('token')
     fetch('http://localhost:3000/boards', {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
         accepts: 'application/json',
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        user_id: this.props.user.user.id,
+        user_id: 1,
         title: this.state.title
       }),
     })
@@ -78,9 +89,13 @@ class BoardContainer extends React.Component {
     })
   }
 
+  // loadBoard = () => {
+  //   console.log('hit')
+  // }
 
   render() {
-    console.log(this.state.title)
+    console.log("BoardContainer :", this.props.loadBoard)
+    // console.log(this.state.title)
     return (
       <>
         <Typography>Create Board</Typography>

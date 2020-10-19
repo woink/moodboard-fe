@@ -1,13 +1,18 @@
-import React from 'react'
-import { Button } from '@material-ui/core'
+import React from 'react';
+import { Button } from '@material-ui/core';
 
-function BoardsList(props) {
+const BoardsList = (props) => {
 
-  return (
-    <div>
-      <Button>{props.title}</Button>
-    </div>
-  )
-}
+  const clickHandler = (e) => {
+    props.loadBoard(e.target.parentElement.parentElement.parentElement.id)
+	};
 
-export default BoardsList
+	return (
+		<div>
+			<Button onClick={clickHandler}>{props.title}</Button>
+			<Button onClick={props.removeBoard}>X</Button>
+		</div>
+	);
+};
+
+export default BoardsList;
