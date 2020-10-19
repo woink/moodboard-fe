@@ -25,8 +25,8 @@ const ImgBin = (props) => {
 			fetch(`http://localhost:3000/images`)
 				.then((resp) => resp.json())
 				.then((imgList) => {
-					console.log('FINDIMGURL: ', boardImgArray);
-					findMatches(imgList, boardImgArray);
+					findMatches
+					(imgList, boardImgArray);
 				});
 		};
 
@@ -114,7 +114,6 @@ const ImgBin = (props) => {
 			}),
 		})
 			.then((resp) => resp.json())
-			.then(console.log);
 	};
 	// ////////////////////////////////////
 
@@ -137,16 +136,6 @@ const ImgBin = (props) => {
 		downloadURI(dataURL, 'MoodBoard');
 	};
 
-	const removeFromBoard = e => {
-		const imgId = parseInt(e.target.parentElement.id)
-		const newArray = images.filter(image => image.id !== imgId)
-		setImages(newArray)
-	}
-
-	const removeFromBin = e => {
-
-	}
-
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
 		const [img] = useImage(image.src, 'Anonymous');
 
@@ -155,8 +144,6 @@ const ImgBin = (props) => {
 
 		useEffect(() => {
 			if (isSelected) {
-				console.log('clicked on image', trRef.current);
-				console.log('show shapeRef: ', shapeRef.current);
 				// attach transformer
 				trRef.current.setNode(shapeRef.current);
 				trRef.current.getLayer().batchDraw();
@@ -253,16 +240,27 @@ const ImgBin = (props) => {
 						}}
 					/>
 					<Button
-						onClick={removeFromBin}
+						onClick={e => {
+							const imgId = parseInt(e.target.parentElement.id)
+							console.log(imgId)
+							props.removeImage(imgId)
+							const newArray = images.filter(image => image.id !== imgId)
+							setImages(newArray)
+						}}
 						id={img.id}
 						label="Remove"
 						size="small"
-
 					>
 						Remove from Bin
 					</Button>
 					<Button
-						onClick={removeFromBoard}
+						onClick={e => {
+							console.log(e.target.parentElement.id)
+							const imgId = parseInt(e.target.parentElement.id)
+							props.removeImageFromBoard(imgId)
+							const newArray = images.filter(image => image.id !== imgId)
+							setImages(newArray)
+						}}
 						id={img.id}
 						label="Remove"
 						size="small"
