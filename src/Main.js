@@ -62,7 +62,6 @@ class Main extends React.Component {
         this.componentDidMount()
       })
       .then(this.findImageBoardId(imgId))
-    
   }
 
   findImageBoardId = imgId => {

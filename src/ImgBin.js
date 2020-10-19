@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './style.css';
-import { Image, Stage, Layer, Transformer } from 'react-konva';
+import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
 import useImage from 'use-image';
 import { Button } from '@material-ui/core';
 
@@ -128,12 +128,15 @@ const ImgBin = (props) => {
 
 	const downloadBoard = (e) => {
 		e.preventDefault();
+		
+	
 		const dataURL = stageRef.current.toDataURL({
 			mimeType: 'image/jpeg',
-			quality: 0,
+			quality: 1,
 			pixelRatio: 2,
+			fillStyle: "rgb(200,0,0)"
 		});
-		downloadURI(dataURL, 'MoodBoard');
+		downloadURI(dataURL, 'MoodBoard')
 	};
 
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
@@ -304,6 +307,7 @@ const ImgBin = (props) => {
 				<Button label="download" onClick={downloadBoard}>
 					Download Board
 				</Button>
+				
 				<Stage
 					width={window.innerWidth}
 					height={window.innerHeight}
@@ -316,29 +320,36 @@ const ImgBin = (props) => {
 							selectShape(null);
 						}
 					}}
-					>
-						
+				>
+					
+
 					<Layer>
-						
+					<Rect
+					width={window.innerWidth}
+					height={window.innerHeight}
+					fill='white'
+				/>
 						{images.map((img, i) => {
 							return (
 								<URLImage
-									key={i}
-									image={img}
-									shapeProps={img}
-									isSelected={img.id === selectedId}
-									onSelect={() => {
-										selectShape(img.id);
-									}}
-									onChange={(newAttrs) => {
-										const rects = images.slice();
-										rects[i] = newAttrs;
-										setImages(rects);
-									}}
+						
+								key={i}
+								image={img}
+								shapeProps={img}
+								isSelected={img.id === selectedId}
+								onSelect={() => {
+									selectShape(img.id);
+								}}
+								onChange={(newAttrs) => {
+									const rects = images.slice();
+									rects[i] = newAttrs;
+									setImages(rects);
+								}}
 								/>
-							);
-						})}
+								);
+							})}
 					</Layer>
+							
 				</Stage>
 			</div>
 		</div>
