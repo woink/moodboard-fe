@@ -43,7 +43,7 @@ class BoardContainer extends React.Component {
 		}
 	};
 
-	removeBoard = (e) => {
+	removeBoard = e => {
     const boardId = e.target.parentElement.parentElement.parentElement.parentElement.id
     console.log(boardId)
 		fetch(`http://localhost:3000/boards/${boardId}`, {

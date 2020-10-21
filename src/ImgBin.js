@@ -165,8 +165,8 @@ const ImgBin = (props) => {
 					{...shapeProps}
 					x={image.x}
 					y={image.y}
-					// width={500}
-					// height={500}
+					offsetX={img ? img.width / 2 : 0}
+					offsetY={img ? img.height / 2 : 0}
 					id="rect1"
 					// use id to remove from state
 					id={image.id}
@@ -177,6 +177,7 @@ const ImgBin = (props) => {
 						);
 						const newPos = e.target._lastPos;
 						newPos.src = e.target.attrs.image.currentSrc;
+						console.log(images[stateIdx])
 						images[stateIdx] = newPos;
 						onChange({
 							...shapeProps,
@@ -262,7 +263,7 @@ const ImgBin = (props) => {
 							size="small"
 							variant="contained"
 							onClick={(e) => {
-									console.log(e.currentTarget.id)
+								console.log(e.currentTarget.id);
 								const imgId = parseInt(e.currentTarget.id);
 								props.removeImage(imgId);
 								console.log(imgId);
@@ -285,8 +286,8 @@ const ImgBin = (props) => {
 	return (
 		<div>
 			<br />
-			<div style={{ marginLeft: '2vw' }}/>
-			<Paper elevation={8}>
+			<div style={{ marginLeft: '2vw' }} />
+			<Paper variant="outlined">
 				<div style={imgs}>{renderImages()}</div>
 			</Paper>
 			<div
@@ -308,11 +309,18 @@ const ImgBin = (props) => {
 				onDragOver={(e) => e.preventDefault()}
 			>
 				<div style={buttonsContainer}>
-					<Button label="save" variant="contained" onClick={prepImgsForSave}>
+					<Button
+						siz="large"
+						label="save"
+						variant="contained"
+						color="secondary"
+						onClick={prepImgsForSave}
+					>
 						Save Changes
 					</Button>
 					<div style={buttonSep} />
 					<Button
+						size="large"
 						label="download"
 						variant="contained"
 						color="secondary"
@@ -321,46 +329,47 @@ const ImgBin = (props) => {
 						Download Board
 					</Button>
 				</div>
-
-				<Stage
-					width={window.innerWidth}
-					height={window.innerHeight}
-					style={stage}
-					ref={stageRef}
-				>
-					<Layer>
-						<Rect
-							width={window.innerWidth}
-							height={window.innerHeight}
-							fill="white"
-							onMouseDown={(e) => {
-								const clickedOnEmpty = e.target.attrs.fill === 'white';
-								if (clickedOnEmpty) {
-									console.log('clicked on empty');
-									selectShape(null);
-								}
-							}}
-						/>
-						{images.map((img, i) => {
-							return (
-								<URLImage
-									key={i}
-									image={img}
-									shapeProps={img}
-									isSelected={img.id === selectedId}
-									onSelect={() => {
-										selectShape(img.id);
-									}}
-									onChange={(newAttrs) => {
-										const rects = images.slice();
-										rects[i] = newAttrs;
-										setImages(rects);
-									}}
-								/>
-							);
-						})}
-					</Layer>
-				</Stage>
+				<Paper elevation={2}>
+					<Stage
+						width={window.innerWidth}
+						height={window.innerHeight}
+						style={stage}
+						ref={stageRef}
+					>
+						<Layer>
+							<Rect
+								width={window.innerWidth}
+								height={window.innerHeight}
+								fill="white"
+								onMouseDown={(e) => {
+									const clickedOnEmpty = e.target.attrs.fill === 'white';
+									if (clickedOnEmpty) {
+										console.log('clicked on empty');
+										selectShape(null);
+									}
+								}}
+							/>
+							{images.map((img, i) => {
+								return (
+									<URLImage
+										key={i}
+										image={img}
+										shapeProps={img}
+										isSelected={img.id === selectedId}
+										onSelect={() => {
+											selectShape(img.id);
+										}}
+										onChange={(newAttrs) => {
+											const rects = images.slice();
+											rects[i] = newAttrs;
+											setImages(rects);
+										}}
+									/>
+								);
+							})}
+						</Layer>
+					</Stage>
+				</Paper>
 			</div>
 		</div>
 	);
@@ -369,9 +378,8 @@ const ImgBin = (props) => {
 export default ImgBin;
 
 const imgBinDiv = {
-	border: '1px solid black',
+	// border: '1px solid black',
 	// justifyContent: 'center',
-
 	// width: "window.innerWidth"
 };
 
@@ -391,13 +399,13 @@ const imgList = {
 };
 
 const stage = {
-	border: '8px solid green',
+	// border: '8px solid green',
 	// width: 'window.innerWidth',
 	// height: 'window.innerHeight'
 };
 
 const maybeDiv = {
-	border: '1px solid red',
+	// border: '1px solid red',
 	// width: 'window.innerWidth - 1000',
 	// height: 'window.innerHeight',
 };
@@ -409,12 +417,13 @@ const buttonSep = {
 const removeButtons = {
 	display: 'flex',
 	justifyContent: 'space-between',
+	marginBottom: '1vh',
 };
 
 const buttonsContainer = {
 	display: 'flex',
 	marginLeft: '20vw',
 	marginRight: '20vw',
-	marginTop: '.5vh',
-	marginBottom: '1vh',
+	marginTop: '2vh',
+	marginBottom: '1.5vh',
 };
