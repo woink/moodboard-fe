@@ -1,21 +1,34 @@
 import React, { useState } from 'react';
-import Dropzone from 'react-dropzone'
+import Dropzone from 'react-dropzone';
+import Button from '@material-ui/core/Button';
+import { makeStyles, useTheme } from '@material-ui/core';
+
+const useStyles = makeStyles((theme) => ({
+	root: {
+		margin: theme.spacing(1),
+		display: 'flex',
+		// flexDirection: 'row',
+		
+	},
+	removeBtn: {
+		marginTop: '1.5vh',
+		marginLeft: '15vw',
+		justifyContent: 'center',
+		alignItems: 'stretch'
+	}
+}))
 
 export default function UploadPane(props) {
-	const [images, setImage] = useState('');
-	const maxSize = 104576
-
-	const handleImageChange = (e) => {
-		setImage(e.target.files);
-	};
+	const classes = useStyles()
+	const maxSize = 104576;
 
 	const handleUploadSubmit = (e) => {
 		e.preventDefault();
 
 		// const token = localStorage.getItem('token');
-		const files = images
-		console.log("Files: ", files)
-		for(const file of files) {
+		const files = e.target.files;
+		console.log('Files: ', e.target.files);
+		for (const file of files) {
 			const formData = new FormData();
 			formData.append('img_src', file);
 			fetch('http://localhost:3000/images', {
@@ -29,59 +42,32 @@ export default function UploadPane(props) {
 				.then((newImage) => {
 					// createBoardAssociation(newImage.id);
 					props.imgUploaded(newImage);
-				})
+				});
 		}
-	
-	}
-
-	// const onDrop = (acceptedFiles) => {
-	// 	console.log(acceptedFiles)
-	// }
-
-	console.log("Images: ", images)
+	};
 
 	return (
-		<div style={uploadDiv}>
-			<form onSubmit={handleUploadSubmit}>
-				<label>
-					Image File
+		<div className={classes.removeBtn}>
+			<label className={classes.removeBtn} htmlFor='image-upload'>
+
 					<input
 						type="file"
 						accept="image/*"
-						name="image"
+						id="image-upload"
 						multiple="multiple"
-						onChange={handleImageChange}
-					/>
+						onChange={handleUploadSubmit}
+						style={{ display: 'none' }}
+				/>
+
+				<Button className={classes.removeBtn} component='span' variant='contained'>
+					Upload Images
+				</Button>
 				</label>
-				<button type="submit" value="Submit">
-					Submit
-				</button>
-			</form>
 		</div>
 	);
 }
 
 const uploadDiv = {
-	flexDirection: 'column',
-	border: '1px solid black',
+	// flexDirection: 'column',
+	// border: '1px solid black',
 };
-
-	// const createBoardAssociation = (newImageID) => {
-	// 	// const token = localStorage.getItem('token');
-	// 	fetch('http://localhost:3000/board_images', {
-	// 		method: 'POST',
-	// 		headers: {
-	// 			'Content-Type': 'application/json',
-	// 			accepts: 'application/json',
-	// 			// Authorization: `Bearer ${token}`,
-	// 		},
-	// 		body: JSON.stringify({
-	// 			board_id: props.board,
-	// 			image_id: newImageID,
-	// 		}),
-	// 	});
-	// };
-
-	// useEffect((props) => {
-	//   props.imgUploaded = true
-	// }, [uploaded])

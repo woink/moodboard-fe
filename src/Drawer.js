@@ -14,7 +14,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BoardContainer from './BoardCointainer'
 
 
-const drawerWidth = 240;
+const drawerWidth = 340;
 
 const useStyles = makeStyles((theme) => ({
   root: {

@@ -49,6 +49,7 @@ class Main extends React.Component {
   }
 
   removeImage = imgId => {
+    console.log(imgId)
     // const imgId = e.target.parentElement.id
     // const token = localStorage.getItem('token')
     fetch(`http://localhost:3000/images/${imgId}`, {
