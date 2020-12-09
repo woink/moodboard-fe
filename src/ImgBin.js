@@ -177,7 +177,7 @@ const ImgBin = (props) => {
 						);
 						const newPos = e.target._lastPos;
 						newPos.src = e.target.attrs.image.currentSrc;
-						console.log(images[stateIdx])
+						console.log(images[stateIdx]);
 						images[stateIdx] = newPos;
 						onChange({
 							...shapeProps,
@@ -376,12 +376,6 @@ const ImgBin = (props) => {
 };
 
 export default ImgBin;
-
-const imgBinDiv = {
-	// border: '1px solid black',
-	// justifyContent: 'center',
-	// width: "window.innerWidth"
-};
 
 const imgs = {
 	display: 'flex',
