@@ -12,9 +12,11 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BoardContainer from './BoardCointainer'
+import Logo from './Logo'
+import SvgIcon from '@material-ui/icons/Menu';
 
 
-const drawerWidth = 240;
+const drawerWidth = 340;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -103,11 +105,14 @@ export default function PersistentDrawerLeft(props) {
             edge="start"
             className={clsx(classes.menuButton, open && classes.hide)}
           >
-            <MenuIcon />
+            {/* <MenuIcon /> */}
+            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300 }}/>
           </IconButton>
-          <Typography variant="h6" noWrap>
+         
+          {/* <Typography variant="h6" noWrap>
             Moodboard Maker
-          </Typography>
+          </Typography> */}
+          
         </Toolbar>
       </AppBar>
       <Drawer

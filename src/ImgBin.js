@@ -1,15 +1,17 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './style.css';
-import { Image, Stage, Layer, Transformer } from 'react-konva';
+import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
 import useImage from 'use-image';
-import { Button } from '@material-ui/core';
+import { Button, Fab } from '@material-ui/core';
+import RemoveIcon from '@material-ui/icons/Remove';
+import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
+import Paper from '@material-ui/core/Paper';
 
 const ImgBin = (props) => {
 	const dragUrl = useRef();
 	const dragId = useRef();
 	const stageRef = useRef();
 	const [images, setImages] = useState([]);
-	const [stageWidth] = useState([window.innerWidth / 1.41]);
 
 	//
 	// LOAD BOARDS
@@ -25,14 +27,13 @@ const ImgBin = (props) => {
 			fetch(`http://localhost:3000/images`)
 				.then((resp) => resp.json())
 				.then((imgList) => {
-					console.log('FINDIMGURL: ', boardImgArray);
 					findMatches(imgList, boardImgArray);
 				});
 		};
 
 		const findMatches = (imgList, boardImgArray) => {
-			let newState = [];
 			let i = 0;
+			let newState = [];
 			if (boardImgArray) {
 				while (i < boardImgArray.length) {
 					const imgMatch = imgList.find(
@@ -70,33 +71,34 @@ const ImgBin = (props) => {
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
 				const boardImage = boardImgArray.find(
-					(boardImg) => (boardImg.image_id === imgId) && (boardImg.board_id === props.board)
+					(boardImg) =>
+						boardImg.image_id === imgId && boardImg.board_id === props.board
 				);
 				if (boardImage) {
 					saveImgBoardState(boardImage.id, stateImg);
 				} else {
-					createImageAssociation(imgId, stateImg)
+					createImageAssociation(imgId, stateImg);
 				}
 			});
 	};
 
 	const createImageAssociation = (imgId, stateImg) => {
 		fetch('http://localhost:3000/board_images/', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-							accepts: 'application/json',
-						},
-						body: JSON.stringify({
-							board_id: props.board,
-							image_id: imgId,
-							x: stateImg.x,
-							y: stateImg.y,
-							width: stateImg.width,
-							height: stateImg.height,
-						}),
-					});
-	}
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				accepts: 'application/json',
+			},
+			body: JSON.stringify({
+				board_id: props.board,
+				image_id: imgId,
+				x: stateImg.x,
+				y: stateImg.y,
+				width: stateImg.width,
+				height: stateImg.height,
+			}),
+		});
+	};
 
 	const saveImgBoardState = (boardImgId, stateImg) => {
 		fetch(`http://localhost:3000/board_images/${boardImgId}`, {
@@ -112,9 +114,7 @@ const ImgBin = (props) => {
 				width: stateImg.width,
 				height: stateImg.height,
 			}),
-		})
-			.then((resp) => resp.json())
-			.then(console.log);
+		}).then((resp) => resp.json());
 	};
 	// ////////////////////////////////////
 
@@ -129,23 +129,14 @@ const ImgBin = (props) => {
 
 	const downloadBoard = (e) => {
 		e.preventDefault();
+
 		const dataURL = stageRef.current.toDataURL({
 			mimeType: 'image/jpeg',
-			quality: 0,
+			quality: 1,
 			pixelRatio: 2,
 		});
 		downloadURI(dataURL, 'MoodBoard');
 	};
-
-	const removeFromBoard = e => {
-		const imgId = parseInt(e.target.parentElement.id)
-		const newArray = images.filter(image => image.id !== imgId)
-		setImages(newArray)
-	}
-
-	const removeFromBin = e => {
-
-	}
 
 	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
 		const [img] = useImage(image.src, 'Anonymous');
@@ -155,20 +146,16 @@ const ImgBin = (props) => {
 
 		useEffect(() => {
 			if (isSelected) {
-				console.log('clicked on image', trRef.current);
-				console.log('show shapeRef: ', shapeRef.current);
 				// attach transformer
 				trRef.current.setNode(shapeRef.current);
 				trRef.current.getLayer().batchDraw();
 			}
 		}, [isSelected]);
-		console.log('ShapeProps: ', shapeProps);
 		useLayoutEffect(() => {
 			shapeRef.current.cache();
 		}, [shapeProps, img, isSelected]);
 
-
-		console.log("ShapeRef: ", shapeRef)
+		console.log('ShapeRef: ', shapeRef);
 		return (
 			<>
 				<Image
@@ -178,8 +165,8 @@ const ImgBin = (props) => {
 					{...shapeProps}
 					x={image.x}
 					y={image.y}
-					// width={500}
-					// height={500}
+					offsetX={img ? img.width / 2 : 0}
+					offsetY={img ? img.height / 2 : 0}
 					id="rect1"
 					// use id to remove from state
 					id={image.id}
@@ -190,6 +177,7 @@ const ImgBin = (props) => {
 						);
 						const newPos = e.target._lastPos;
 						newPos.src = e.target.attrs.image.currentSrc;
+						console.log(images[stateIdx])
 						images[stateIdx] = newPos;
 						onChange({
 							...shapeProps,
@@ -221,6 +209,7 @@ const ImgBin = (props) => {
 				/>
 				{isSelected && (
 					<Transformer
+						rotateEnabled={false}
 						ref={trRef}
 						boundBoxFunc={(oldBox, newBox) => {
 							// limit resize
@@ -237,7 +226,6 @@ const ImgBin = (props) => {
 
 	const renderImages = () => {
 		return props.images.map((img) => {
-			console.log('Image ID: ', img.id);
 			return (
 				<div style={imgList}>
 					<img
@@ -245,31 +233,50 @@ const ImgBin = (props) => {
 						width="125vw"
 						id={img.id}
 						src={img.src}
-						// draggable
+						draggable
 						// onDblClick={onSelect}
 						onDragStart={(e) => {
 							dragUrl.current = e.target.src;
 							dragId.current = parseInt(e.target.id);
 						}}
 					/>
-					<Button
-						onClick={removeFromBin}
-						id={img.id}
-						label="Remove"
-						size="small"
-
-					>
-						Remove from Bin
-					</Button>
-					<Button
-						onClick={removeFromBoard}
-						id={img.id}
-						label="Remove"
-						size="small"
-
-					>
-						Remove from Board
-					</Button>
+					<div style={removeButtons}>
+						<Button
+							size="small"
+							color="secondary"
+							aria-label="remove"
+							variant="contained"
+							onClick={(e) => {
+								const imgId = parseInt(e.currentTarget.id);
+								console.log(imgId);
+								props.removeImageFromBoard(imgId);
+								const newArray = images.filter((image) => image.id !== imgId);
+								setImages(newArray);
+							}}
+							id={img.id}
+							label="Remove"
+							size="small"
+						>
+							<RemoveIcon />
+						</Button>
+						<Button
+							size="small"
+							variant="contained"
+							onClick={(e) => {
+								console.log(e.currentTarget.id);
+								const imgId = parseInt(e.currentTarget.id);
+								props.removeImage(imgId);
+								console.log(imgId);
+								const newArray = images.filter((image) => image.id !== imgId);
+								setImages(newArray);
+							}}
+							id={img.id}
+							label="Remove"
+							size="small"
+						>
+							<DeleteForeverIcon />
+						</Button>
+					</div>
 				</div>
 			);
 		});
@@ -279,7 +286,10 @@ const ImgBin = (props) => {
 	return (
 		<div>
 			<br />
-			<div style={imgs}>{renderImages()}</div>
+			<div style={{ marginLeft: '2vw' }} />
+			<Paper variant="outlined">
+				<div style={imgs}>{renderImages()}</div>
+			</Paper>
 			<div
 				style={maybeDiv}
 				onDrop={(e) => {
@@ -298,50 +308,68 @@ const ImgBin = (props) => {
 				}}
 				onDragOver={(e) => e.preventDefault()}
 			>
-				
-				<Button label="save" onClick={prepImgsForSave}>
-					Save Changes
-				</Button>
-				<div style={buttonSep}/>
-				<Button label="download" onClick={downloadBoard}>
-					Download Board
-				</Button>
-				<Stage
-					width={window.innerWidth}
-					height={window.innerHeight}
-					style={stage}
-					ref={stageRef}
-					onMouseDown={(e) => {
-						const clickedOnEmpty = e.target === e.target.getStage();
-						if (clickedOnEmpty) {
-							console.log('clicked on empty');
-							selectShape(null);
-						}
-					}}
+				<div style={buttonsContainer}>
+					<Button
+						siz="large"
+						label="save"
+						variant="contained"
+						color="secondary"
+						onClick={prepImgsForSave}
 					>
-						
-					<Layer>
-						
-						{images.map((img, i) => {
-							return (
-								<URLImage
-									key={i}
-									image={img}
-									shapeProps={img}
-									isSelected={img.id === selectedId}
-									onSelect={() => {
-										selectShape(img.id);
-									}}
-									onChange={(newAttrs) => {
-										const rects = images.slice();
-										rects[i] = newAttrs;
-										setImages(rects);
-									}}
-								/>
-							);
-						})}
-					</Layer>
-				</Stage>
+						Save Changes
+					</Button>
+					<div style={buttonSep} />
+					<Button
+						size="large"
+						label="download"
+						variant="contained"
+						color="secondary"
+						onClick={downloadBoard}
+					>
+						Download Board
+					</Button>
+				</div>
+				<Paper elevation={2}>
+					<Stage
+						width={window.innerWidth}
+						height={window.innerHeight}
+						style={stage}
+						ref={stageRef}
+					>
+						<Layer>
+							<Rect
+								width={window.innerWidth}
+								height={window.innerHeight}
+								fill="white"
+								onMouseDown={(e) => {
+									const clickedOnEmpty = e.target.attrs.fill === 'white';
+									if (clickedOnEmpty) {
+										console.log('clicked on empty');
+										selectShape(null);
+									}
+								}}
+							/>
+							{images.map((img, i) => {
+								return (
+									<URLImage
+										key={i}
+										image={img}
+										shapeProps={img}
+										isSelected={img.id === selectedId}
+										onSelect={() => {
+											selectShape(img.id);
+										}}
+										onChange={(newAttrs) => {
+											const rects = images.slice();
+											rects[i] = newAttrs;
+											setImages(rects);
+										}}
+									/>
+								);
+							})}
+						</Layer>
+					</Stage>
+				</Paper>
 			</div>
 		</div>
 	);
@@ -350,40 +378,52 @@ const ImgBin = (props) => {
 export default ImgBin;
 
 const imgBinDiv = {
-	border: '1px solid black',
+	// border: '1px solid black',
 	// justifyContent: 'center',
-
 	// width: "window.innerWidth"
 };
 
 const imgs = {
 	display: 'flex',
-	border: '1px solid orange',
+	// border: '1px solid orange',
 	overflowX: 'scroll',
 	// width: '40vw'
 	marginRight: '3vw',
 	marginLeft: '3vw',
-	alignItems: 'flex-end'
+	alignItems: 'flex-end',
 	// flexBasis: 'content'
 };
 
 const imgList = {
-	marginRight: '2vw'
-}
+	marginRight: '2vw',
+};
 
 const stage = {
-	border: '8px solid green',
+	// border: '8px solid green',
 	// width: 'window.innerWidth',
 	// height: 'window.innerHeight'
 };
 
 const maybeDiv = {
-	border: '1px solid red',
+	// border: '1px solid red',
 	// width: 'window.innerWidth - 1000',
 	// height: 'window.innerHeight',
 };
 
 const buttonSep = {
-	flex: '1'
-}
+	flex: '1',
+};
 
+const removeButtons = {
+	display: 'flex',
+	justifyContent: 'space-between',
+	marginBottom: '1vh',
+};
+
+const buttonsContainer = {
+	display: 'flex',
+	marginLeft: '20vw',
+	marginRight: '20vw',
+	marginTop: '2vh',
+	marginBottom: '1.5vh',
+};
