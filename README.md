@@ -8,4 +8,6 @@
 - Save the location and scale of the images on the board.
 - Export the board as a JPEG onto the user's computer.
 
-Backend is woink/moodboard-api
+
+
+Backend is located at /woink/moodboard-api
