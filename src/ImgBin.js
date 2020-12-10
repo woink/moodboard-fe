@@ -35,7 +35,7 @@ const ImgBin = (props) => {
 			let i = 0;
 			let newState = [];
 			if (boardImgArray) {
-				while (i < boardImgArray.length) {
+				for (let i = 0; i < boardImgArray.length; i++) {
 					const imgMatch = imgList.find(
 						(img) => img.id === boardImgArray[i].image_id
 					);
@@ -48,7 +48,6 @@ const ImgBin = (props) => {
 						height: boardImgArray[i].height,
 					};
 					newState.push(newStateObj);
-					i++;
 				}
 			}
 			setImages(newState);
@@ -56,7 +55,6 @@ const ImgBin = (props) => {
 	}, [props.board]);
 	// ////////////////////////////////////
 
-	console.log('Images State: ', images);
 	//
 	// SAVE IMAGES W/ LOCATION
 	//
@@ -106,7 +104,6 @@ const ImgBin = (props) => {
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				x: stateImg.x,

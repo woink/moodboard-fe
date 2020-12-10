@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Button } from '@material-ui/core';
-import CreateBoard from './CreateBoard';
+import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
 
 class BoardContainer extends React.Component {
@@ -133,14 +132,4 @@ const form = {
   justifyContent: 'center',
   marginTop: '2vh',
   marginBottom: '1vh'
-}
-
-const boardListDiv = {
-  // display: 'flex',
-  // justifyContent: 'space-between',
-  // marginLeft: '2vw'
-}
-
-const boardList = {
-  backgroundColor: 'red'
 }

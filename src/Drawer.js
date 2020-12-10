@@ -101,7 +101,7 @@ export default function PersistentDrawerLeft(props) {
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             {/* <MenuIcon /> */}
-            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300, color: 'white' }}/>
+            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300}}/>
           </IconButton>          
         </Toolbar>
       </AppBar>
@@ -125,7 +125,3 @@ export default function PersistentDrawerLeft(props) {
      </div>
   );
 }
-
-
-// Add to Board Container when auth is enabled
-// user={props.user}
