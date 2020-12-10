@@ -1,6 +1,5 @@
 import React from 'react'
 import { TextField } from '@material-ui/core'
-import { Redirect } from 'react-router-dom'
 
 class CreateBoard extends React.Component {
 
@@ -12,7 +11,6 @@ class CreateBoard extends React.Component {
   submitHandler = e => {
     e.preventDefault()
 
-    const token = localStorage.getItem('token')
     fetch('http://localhost:3000/boards', {
       method: "POST",
       headers: {
