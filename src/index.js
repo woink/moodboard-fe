@@ -15,7 +15,6 @@ const mainTheme = createMuiTheme({
   }
 })
 
-
 ReactDOM.render(
 	<ThemeProvider theme={mainTheme}>
 		<BrowserRouter>
