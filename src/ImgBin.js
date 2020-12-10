@@ -1,5 +1,4 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import './style.css';
 import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
 import useImage from 'use-image';
 import { Button } from '@material-ui/core';

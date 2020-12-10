@@ -69,6 +69,13 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  logo: {
+    fill: 'white',
+    width: '20vw',
+    "&:hover": {
+      fill: 'grey'
+    }
+  }
 }));
 
 export default function PersistentDrawerLeft(props) {
@@ -101,7 +108,7 @@ export default function PersistentDrawerLeft(props) {
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             {/* <MenuIcon /> */}
-            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300}}/>
+            <Logo viewBox="0 0 629.58 35.4" className={classes.logo} />
           </IconButton>          
         </Toolbar>
       </AppBar>
@@ -125,3 +132,8 @@ export default function PersistentDrawerLeft(props) {
      </div>
   );
 }
+
+// const logo = {
+//   fill: 'white',
+//   width: '20vw'
+// }
