@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './style.css';
 import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
 import useImage from 'use-image';
-import { Button, Fab } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';

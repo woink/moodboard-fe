@@ -10,15 +10,10 @@ class BoardContainer extends React.Component {
 	};
 
 	componentDidMount() {
-		// const token = localStorage.getItem('token')
 		fetch('http://localhost:3000/boards', {
-			// headers: {
-			//   Authorization: `Bearer ${token}`
-			// }
 		})
 			.then((resp) => resp.json())
 			.then((boards) => {
-				console.log('In get request: ', boards);
 				this.setState({
 					boardsArray: boards,
 				});
