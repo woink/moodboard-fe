@@ -32,7 +32,6 @@ const ImgBin = (props) => {
 		};
 
 		const findMatches = (imgList, boardImgArray) => {
-			let i = 0;
 			let newState = [];
 			if (boardImgArray) {
 				for (let i = 0; i < boardImgArray.length; i++) {
@@ -164,7 +163,6 @@ const ImgBin = (props) => {
 					y={image.y}
 					offsetX={img ? img.width / 2 : 0}
 					offsetY={img ? img.height / 2 : 0}
-					id="rect1"
 					// use id to remove from state
 					id={image.id}
 					draggable
@@ -252,7 +250,6 @@ const ImgBin = (props) => {
 							}}
 							id={img.id}
 							label="Remove"
-							size="small"
 						>
 							<RemoveIcon />
 						</Button>
@@ -269,7 +266,6 @@ const ImgBin = (props) => {
 							}}
 							id={img.id}
 							label="Remove"
-							size="small"
 						>
 							<DeleteForeverIcon />
 						</Button>
@@ -373,12 +369,6 @@ const ImgBin = (props) => {
 };
 
 export default ImgBin;
-
-const imgBinDiv = {
-	// border: '1px solid black',
-	// justifyContent: 'center',
-	// width: "window.innerWidth"
-};
 
 const imgs = {
 	display: 'flex',
