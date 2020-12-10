@@ -6,7 +6,6 @@ import Drawer from './Drawer'
 
 class Main extends React.Component {
   state = {
-    // user: this.props.user,
     images: [],
     boardImages: [],
     board: 1
@@ -19,10 +18,8 @@ class Main extends React.Component {
   }
  
   componentDidMount = () => {
-    // const token = localStorage.getItem('token')
     fetch(`http://localhost:3000/images`, {
       method: 'GET',
-      // headers: { Authorization: `Bearer ${token}` }
     })
       .then((resp) => resp.json())
       .then((upImages) => {
@@ -50,8 +47,6 @@ class Main extends React.Component {
 
   removeImage = imgId => {
     console.log(imgId)
-    // const imgId = e.target.parentElement.id
-    // const token = localStorage.getItem('token')
     fetch(`http://localhost:3000/images/${imgId}`, {
       method: "DELETE",
       headers: {
@@ -83,8 +78,6 @@ class Main extends React.Component {
         
       })
   }
-
-  // boardImg.image_id === imgId).id
 
   removeBoardImage = (stateBoardImgId, imgId) => {
     fetch(`http://localhost:3000/boards/${this.state.board}/board_images/${parseInt(stateBoardImgId)}`, {
@@ -118,11 +111,3 @@ class Main extends React.Component {
 
 export default Main;
 
-const main = {
-    display: 'flex'
-}
-
-const middle = {
-  flexDirection: 'row',
-  flex: 'grow'
-}

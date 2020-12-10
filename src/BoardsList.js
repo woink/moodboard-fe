@@ -7,21 +7,20 @@ const useStyles = makeStyles((theme) => ({
 		'& > *': {
 			margin: theme.spacing(1),
 			justifyContent: 'space-between'
-			
 		},
 	},
 	moodTitle: {
-		// display: 'flex',
+		removeBtn: {
+			backgroundColor: 'red'
+		},
 		flexDirection: 'row',
 		marginLeft: '2vw',
 		justifyContent: 'space-between',
 		flex: 1
 	},
-	removeBtn: {
-		// justifyContent: 'flex-end'
-		backgroundColor: 'red'
+	
 	}
-}));
+));
 
 const BoardsList = (props) => {
 	const classes = useStyles();
@@ -35,8 +34,7 @@ const BoardsList = (props) => {
 			<Button className={classes.moodTitle} color="primary" variant="contained" onClick={clickHandler}>
 				{props.title}
 			</Button>
-			{/* <div flexGrow={1} /> */}
-			<Button className={classes.removeBtn} className={classes.moodTitle} color="#ffebee" variant="contained" onClick={props.removeBoard}>
+			<Button className={classes.removeBtn}  backgroundColor='red' color="#ffebee" variant="contained" onClick={props.removeBoard}>
 				<DeleteForeverIcon />
 			</Button>
 		</div>
@@ -44,3 +42,4 @@ const BoardsList = (props) => {
 };
 
 export default BoardsList;
+

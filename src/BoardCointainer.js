@@ -59,14 +59,11 @@ class BoardContainer extends React.Component {
 
 	submitHandler = (e) => {
 		e.preventDefault();
-
-		// const token = localStorage.getItem('token')
 		fetch('http://localhost:3000/boards', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				user_id: 1,
@@ -89,10 +86,6 @@ class BoardContainer extends React.Component {
 			title: e.target.value,
 		});
 	};
-
-	// loadBoard = () => {
-	//   console.log('hit')
-	// }
 
 	render() {
 		console.log('BoardContainer :', this.props.loadBoard);

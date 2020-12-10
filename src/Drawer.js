@@ -12,7 +12,6 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BoardContainer from './BoardCointainer'
 import { ReactComponent as Logo } from './assets/logo.svg'
 
-
 const drawerWidth = 340;
 
 const useStyles = makeStyles((theme) => ({
@@ -102,13 +101,8 @@ export default function PersistentDrawerLeft(props) {
             className={clsx(classes.menuButton, open && classes.hide)}
           >
             {/* <MenuIcon /> */}
-            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300 }}/>
-          </IconButton>
-         
-          {/* <Typography variant="h6" noWrap>
-            Moodboard Maker
-          </Typography> */}
-          
+            <Logo viewBox="0 0 629.58 35.4" style={{ width: 300, color: 'white' }}/>
+          </IconButton>          
         </Toolbar>
       </AppBar>
       <Drawer
