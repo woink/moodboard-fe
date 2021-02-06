@@ -9,8 +9,7 @@
 - Save the location and scale of the images on the board.
 - Export the board as a JPEG onto the user's computer.
 
-
-
+---
 
 Work in progress Nodejs, Typescript and MongoDB backend located at [/woink/moodboard-node-api](https://github.com/woink/moodboard-api)
 
