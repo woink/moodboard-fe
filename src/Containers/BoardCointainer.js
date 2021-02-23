@@ -3,17 +3,13 @@ import { Typography, TextField } from '@material-ui/core';
 import BoardsList from '../BoardsList';
 
 function BoardContainer({ loadBoard }) {
-	const [boardsArray] = useState([]);
+	const [boardsArray, setBoardsArray] = useState([]);
 	const [title, setTitle] = useState('');
 
 	useEffect(() => {
 		fetch('http://localhost:3000/boards', {})
 			.then((resp) => resp.json())
-			.then((boards) => {
-				this.setState({
-					boardsArray: boards,
-				});
-			});
+			.then((boards) => setBoardsArray(boards));
 	}, []);
 
 	const renderBoards = () => {
@@ -49,9 +45,7 @@ function BoardContainer({ loadBoard }) {
 			(stateBoard) => stateBoard.id !== parseInt(boardId)
 		);
 		console.log(boardId);
-		this.setState({
-			boardsArray: newArray,
-		});
+		setBoardsArray(newArray);
 	};
 
 	const submitHandler = (e) => {
@@ -71,10 +65,8 @@ function BoardContainer({ loadBoard }) {
 			.then((board) => {
 				console.log(board);
 				const newBoardsArray = [...boardsArray, board];
-				this.setState({
-					boardsArray: newBoardsArray,
-					title: '',
-				});
+				setBoardsArray(newBoardsArray);
+				setTitle('');
 			});
 	};
 
