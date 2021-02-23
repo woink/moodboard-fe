@@ -15,26 +15,28 @@ const useStyles = makeStyles((theme) => ({
 	}
 }))
 
-export default function UploadPane(props) {
+export default function UploadPane(props: any) {
 	const classes = useStyles()
 	const maxSize = 104576;
 
-	const handleUploadSubmit = (e) => {
+	const handleUploadSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
 
 		const files = e.target.files;
-		console.log('Files: ', e.target.files);
-		for (const file of files) {
-			const formData = new FormData();
-			formData.append('img_src', file);
-			fetch('http://localhost:3000/images', {
-				method: 'POST',
-				body: formData,
-			})
-				.then((resp) => resp.json())
-				.then((newImage) => {
-					props.imgUploaded(newImage);
-				});
+
+		if (files) {
+			for (const file of files) {
+				const formData = new FormData();
+				formData.append('img_src', file);
+				fetch('http://localhost:3000/images', {
+					method: 'POST',
+					body: formData,
+				})
+					.then((resp) => resp.json())
+					.then((newImage) => {
+						props.imgUploaded(newImage);
+					});
+			}
 		}
 	};
 
@@ -46,7 +48,7 @@ export default function UploadPane(props) {
 						type="file"
 						accept="image/*"
 						id="image-upload"
-						multiple="multiple"
+						multiple={true}
 						onChange={handleUploadSubmit}
 						style={{ display: 'none' }}
 				/>

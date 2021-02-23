@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import BoardsList from '../BoardsList';
 
-function BoardContainer({ loadBoard }) {
+function BoardContainer( loadBoard: any ) {
 	const [boardsArray, setBoardsArray] = useState([]);
 	const [title, setTitle] = useState('');
 
@@ -13,7 +13,7 @@ function BoardContainer({ loadBoard }) {
 	}, []);
 
 	const renderBoards = () => {
-		const boards = boardsArray;
+		const boards: any[] = boardsArray;
 		if (boards.length > 0) {
 			return boards.map((board) => {
 				return (
@@ -30,7 +30,7 @@ function BoardContainer({ loadBoard }) {
 		}
 	};
 
-	const removeBoard = (e) => {
+	const removeBoard = (e: any) => {
 		const boardId =
 			e.target.parentElement.parentElement.parentElement.parentElement.id;
 		console.log(boardId);
@@ -42,13 +42,13 @@ function BoardContainer({ loadBoard }) {
 			},
 		});
 		const newArray = boardsArray.filter(
-			(stateBoard) => stateBoard.id !== parseInt(boardId)
+			(stateBoard: any) => stateBoard.id !== parseInt(boardId)
 		);
 		console.log(boardId);
 		setBoardsArray(newArray);
 	};
 
-	const submitHandler = (e) => {
+	const submitHandler = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 		fetch('http://localhost:3000/boards', {
 			method: 'POST',
@@ -64,13 +64,13 @@ function BoardContainer({ loadBoard }) {
 			.then((resp) => resp.json())
 			.then((board) => {
 				console.log(board);
-				const newBoardsArray = [...boardsArray, board];
+				const newBoardsArray: any = [...boardsArray, board];
 				setBoardsArray(newBoardsArray);
 				setTitle('');
 			});
 	};
 
-	const changeHandler = (e) => {
+	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
 	};
 
