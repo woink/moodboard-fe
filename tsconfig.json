@@ -6,11 +6,13 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
     "lib": [
       "dom",
       "dom.iterable",
       "esnext",
-      "ES6"
+      "es2015.collection",
+      "es2015.iterable"
     ],
     "noImplicitAny": true,
     "noImplicitThis": true,
