@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
-import Dropzone from 'react-dropzone';
+import React from 'react';
 import Button from '@material-ui/core/Button';
-import { makeStyles, useTheme } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -20,7 +19,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UploadPane(props) {
 	const classes = useStyles()
-	const maxSize = 104576;
 
 	const handleUploadSubmit = (e) => {
 		e.preventDefault();
@@ -66,8 +64,3 @@ export default function UploadPane(props) {
 		</div>
 	);
 }
-
-const uploadDiv = {
-	// flexDirection: 'column',
-	// border: '1px solid black',
-};

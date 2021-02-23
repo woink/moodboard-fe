@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BoardContainer from './BoardCointainer'
-import Logo from './Logo'
+import { Component as Logo } from './assets/Logo.svg'
 import SvgIcon from '@material-ui/icons/Menu';
 
 

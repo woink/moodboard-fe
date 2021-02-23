@@ -2,7 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import './style.css';
 import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
 import useImage from 'use-image';
-import { Button, Fab } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';
@@ -177,7 +177,7 @@ const ImgBin = (props) => {
 						);
 						const newPos = e.target._lastPos;
 						newPos.src = e.target.attrs.image.currentSrc;
-						console.log(images[stateIdx])
+						console.log(images[stateIdx]);
 						images[stateIdx] = newPos;
 						onChange({
 							...shapeProps,
@@ -376,12 +376,6 @@ const ImgBin = (props) => {
 };
 
 export default ImgBin;
-
-const imgBinDiv = {
-	// border: '1px solid black',
-	// justifyContent: 'center',
-	// width: "window.innerWidth"
-};
 
 const imgs = {
 	display: 'flex',

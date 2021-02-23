@@ -1,6 +1,5 @@
 import React from 'react';
-import { Typography, TextField, Button } from '@material-ui/core';
-import CreateBoard from './CreateBoard';
+import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
 
 class BoardContainer extends React.Component {
@@ -10,11 +9,7 @@ class BoardContainer extends React.Component {
 	};
 
 	componentDidMount() {
-		// const token = localStorage.getItem('token')
 		fetch('http://localhost:3000/boards', {
-			// headers: {
-			//   Authorization: `Bearer ${token}`
-			// }
 		})
 			.then((resp) => resp.json())
 			.then((boards) => {
@@ -65,13 +60,11 @@ class BoardContainer extends React.Component {
 	submitHandler = (e) => {
 		e.preventDefault();
 
-		// const token = localStorage.getItem('token')
 		fetch('http://localhost:3000/boards', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				user_id: 1,
@@ -95,13 +88,8 @@ class BoardContainer extends React.Component {
 		});
 	};
 
-	// loadBoard = () => {
-	//   console.log('hit')
-	// }
-
 	render() {
 		console.log('BoardContainer :', this.props.loadBoard);
-		// console.log(this.state.title)
 		return (
 			<>
 				<Typography variant="h6" style={title} gutterBottom={false}>
@@ -136,7 +124,6 @@ const title = {
 };
 
 const textField = {
-	// display: 'flex',
 	justifyContent: 'center',
 };
 
@@ -145,14 +132,4 @@ const form = {
   justifyContent: 'center',
   marginTop: '2vh',
   marginBottom: '1vh'
-}
-
-const boardListDiv = {
-  // display: 'flex',
-  // justifyContent: 'space-between',
-  // marginLeft: '2vw'
-}
-
-const boardList = {
-  backgroundColor: 'red'
 }
