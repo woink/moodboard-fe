@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import UploadPane from './Containers/UploadPane';
-import ImgBin from './ImgBin';
+import ImgBin from './Containers/ImgBin';
 import Drawer from './Components/Drawer';
 
 function App() {
