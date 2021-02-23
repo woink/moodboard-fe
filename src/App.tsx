@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import './App.css';
-import UploadPane from './UploadPane';
+import UploadPane from './Containers/UploadPane';
 import ImgBin from './ImgBin';
-import Drawer from './Drawer';
+import Drawer from './Components/Drawer';
 
 function App() {
 	const [images, setImages] = useState([]);
