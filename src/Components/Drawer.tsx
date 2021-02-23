@@ -78,7 +78,7 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function PersistentDrawerLeft({ loadBoard }) {
+function PersistentDrawerLeft( loadBoard: any ) {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [open, setOpen] = useState(false);
@@ -113,7 +113,6 @@ function PersistentDrawerLeft({ loadBoard }) {
 			</AppBar>
 			<Drawer
 				className={classes.drawer}
-				variant="static"
 				anchor="left"
 				open={open}
 				classes={{

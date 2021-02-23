@@ -4,9 +4,9 @@ import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';
-import URLImage from './Components/URLImage'
+import URLImage from '../Components/URLImage'
 
-const ImgBin = (props) => {
+function ImgBin(props) {
 	const dragUrl = useRef();
 	const dragId = useRef();
 	const stageRef = useRef();
@@ -14,11 +14,8 @@ const ImgBin = (props) => {
 
 	//
 	// LOAD BOARDS
-	//
-
-	
+	//	
 	useEffect(() => {
-		// setImages([]);
 		fetch(`http://localhost:3000/boards/${props.board}`)
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
@@ -145,7 +142,6 @@ const ImgBin = (props) => {
 						id={img.id}
 						src={img.src}
 						draggable
-						// onDblClick={onSelect}
 						onDragStart={(e) => {
 							dragUrl.current = e.target.src;
 							dragId.current = parseInt(e.target.id);

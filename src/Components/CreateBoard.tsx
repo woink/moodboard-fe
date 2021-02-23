@@ -5,7 +5,7 @@ function CreateBoard() {
 	const [title, setTitle] = useState('');
 	const [submitted, setSubmitted] = useState(false);
 
-	const submitHandler = (e) => {
+	const submitHandler = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
 		fetch('http://localhost:3000/boards', {
@@ -13,7 +13,6 @@ function CreateBoard() {
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				user_id: 1,
@@ -28,7 +27,7 @@ function CreateBoard() {
 			});
 	};
 
-	const changeHandler = (e) => {
+	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
 	};
 
