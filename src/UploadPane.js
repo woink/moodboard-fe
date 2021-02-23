@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Dropzone from 'react-dropzone';
 import Button from '@material-ui/core/Button';
 import { makeStyles, useTheme } from '@material-ui/core';
 
@@ -7,7 +6,6 @@ const useStyles = makeStyles((theme) => ({
 	root: {
 		margin: theme.spacing(1),
 		display: 'flex',
-		// flexDirection: 'row',
 		
 	},
 	removeBtn: {
@@ -66,8 +64,3 @@ export default function UploadPane(props) {
 		</div>
 	);
 }
-
-const uploadDiv = {
-	// flexDirection: 'column',
-	// border: '1px solid black',
-};
