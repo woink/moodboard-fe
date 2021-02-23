@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
 
-class BoardContainer extends React.Component {
-	state = {
-		boardsArray: [],
-		title: '',
-	};
+function BoardContainer() {
+	const [boardsArray] = useState([])
+	const [title] = useState<ITitle>({title: ''})
 
-	componentDidMount() {
+	interface ITitle {
+		title: string
+	}
+
+	useEffect(() => {
 		fetch('http://localhost:3000/boards', {
 		})
 			.then((resp) => resp.json())
@@ -17,10 +19,10 @@ class BoardContainer extends React.Component {
 					boardsArray: boards,
 				});
 			});
-	}
+	}, [])
 
-	renderBoards = () => {
-		const boards = this.state.boardsArray;
+	const renderBoards = () => {
+		const boards = boardsArray;
 		if (boards.length > 0) {
 			return boards.map((board) => {
 				return (
@@ -37,7 +39,7 @@ class BoardContainer extends React.Component {
 		}
 	};
 
-	removeBoard = e => {
+	const removeBoard = e => {
     const boardId = e.target.parentElement.parentElement.parentElement.parentElement.id
     console.log(boardId)
 		fetch(`http://localhost:3000/boards/${boardId}`, {
@@ -47,7 +49,7 @@ class BoardContainer extends React.Component {
 				Accepts: 'application/json',
 			},
 		});
-		const newArray = this.state.boardsArray.filter(
+		const newArray = boardsArray.filter(
 			(stateBoard) => stateBoard.id !== parseInt(boardId)
 		);
 		console.log(boardId);
@@ -56,7 +58,7 @@ class BoardContainer extends React.Component {
 		});
 	};
 
-	submitHandler = (e) => {
+	const submitHandler = (e) => {
 		e.preventDefault();
 		fetch('http://localhost:3000/boards', {
 			method: 'POST',
@@ -66,13 +68,13 @@ class BoardContainer extends React.Component {
 			},
 			body: JSON.stringify({
 				user_id: 1,
-				title: this.state.title,
+				title: title,
 			}),
 		})
 			.then((resp) => resp.json())
 			.then((board) => {
 				console.log(board);
-				const newBoardsArray = [...this.state.boardsArray, board];
+				const newBoardsArray = [...boardsArray, board];
 				this.setState({
 					boardsArray: newBoardsArray,
 					title: '',
@@ -80,38 +82,35 @@ class BoardContainer extends React.Component {
 			});
 	};
 
-	changeHandler = (e) => {
+	const changeHandler = (e) => {
 		this.setState({
 			title: e.target.value,
 		});
 	};
 
-	render() {
-		console.log('BoardContainer :', this.props.loadBoard);
-		// console.log(this.state.title)
+
 		return (
 			<>
-				<Typography variant="h6" style={title} gutterBottom={false}>
+				<Typography variant='h6'  gutterBottom={false}>
 					Create Board
 				</Typography>
 				<div style={form}>
-					<form onSubmit={this.submitHandler}>
+					<form onSubmit={submitHandler}>
 						<TextField
 							required
               label="Title"
               variant="outlined"
               size="small"
-							onChange={this.changeHandler}
-							value={this.state.title}
+							onChange={changeHandler}
+							value={title}
 							style={textField}
 						/>
 					</form>
         </div>
         
-				{this.renderBoards()}
+				{renderBoards()}
 			</>
 		);
-	}
 }
 
 export default BoardContainer;

@@ -1,14 +1,11 @@
-import React from 'react'
+import {useState} from 'react'
 import { TextField } from '@material-ui/core'
 
-class CreateBoard extends React.Component {
+function CreateBoard() {
+  const [title, setTitle] = setState('')
+  const [submitted, setSubmitted] = setState(false)
 
-  state = {
-    title: '',
-    submitted: false
-  }
-
-  submitHandler = e => {
+  const submitHandler = e => {
     e.preventDefault()
 
     fetch('http://localhost:3000/boards', {
@@ -20,42 +17,34 @@ class CreateBoard extends React.Component {
       },
       body: JSON.stringify({
         user_id: 1,
-        title: this.state.title
+        title: title
       }),
     })
       .then(resp => resp.json())
       .then(newBoard => {
         console.log('post new board', newBoard)
-        this.setState({
-          submitted: true,
-          title: ''
-        })
+        setSubmitted(false)
+        setTitle('')
       })
-    
   }
 
-  changeHandler = e => {
-    this.setState({
-      title: e.target.value
-    })
+  const changeHandler = e => {
+    setTitle(e.target.value)
   }
   
-  render() {
-    console.log(this.state.submitted)
 
     return (
       <>
-        <form onSubmit={this.submitHandler}>
+        <form onSubmit={submitHandler}>
           <TextField
             required
             label="Title"
-            onChange={this.changeHandler}
-            value={this.state.title}
+            onChange={changeHandler}
+            value={title}
           />
         </form>
       </>
     )
   }
-}
 
 export default CreateBoard

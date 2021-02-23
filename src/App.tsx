@@ -9,27 +9,26 @@ function App() {
 	const [boardImages, setBoardImages] = useState();
 	const [board, setBoard] = useState(1);
 
-	const loadBoard = (id: string) => {
-		setBoard(parseInt(id));
-	};
-
 	useEffect(() => {
 		fetch(`http://localhost:3000/images`, {
 			method: 'GET',
 		})
-			.then((resp) => resp.json())
-			.then((upImages) => setImages(upImages));
-
+		.then((resp) => resp.json())
+		.then((upImages) => setImages(upImages));
+		
 		fetch(`http://localhost:3000/boards/${board}/`, {
 			method: 'GET',
 		})
-			.then((resp) => resp.json())
-			.then((boardImgs) => setBoardImages(boardImgs));
+		.then((resp) => resp.json())
+		.then((boardImgs) => setBoardImages(boardImgs));
 	}, []);
-
+	
 	const imgUploaded = (obj: never) => {
-		const updatedImages: React.SetStateAction<never[]> = [...images, obj];
-		setImages(updatedImages);
+		setImages([...images, obj]);
+	};
+
+	const loadBoard = (id: string) => {
+		setBoard(parseInt(id));
 	};
 
 	const removeImage = (imgId: number) => {
