@@ -24,8 +24,16 @@ const useStyles = makeStyles((theme) => ({
 	}
 }));
 
+type Props = {
+	title: string
+	loadBoard: (board: any) => void
+	removeBoard: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+function BoardsList({title, loadBoard, removeBoard}: Props) {
 	const classes = useStyles();
 
+	const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
 		loadBoard(e.target.parentElement.parentElement.parentElement.id);
 	};
 

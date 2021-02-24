@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
-import BoardsList from '../BoardsList';
+import BoardsList from './BoardsList';
 
-function BoardContainer( loadBoard: any ) {
+type Props = {
+	loadBoard: () => void
+}
+
+function BoardContainer({loadBoard}: Props) {
 	const [boardsArray, setBoardsArray] = useState([]);
 	const [title, setTitle] = useState('');
 
@@ -30,7 +34,7 @@ function BoardContainer( loadBoard: any ) {
 		}
 	};
 
-	const removeBoard = (e: any) => {
+	const removeBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
 		const boardId =
 			e.target.parentElement.parentElement.parentElement.parentElement.id;
 		console.log(boardId);
@@ -48,7 +52,7 @@ function BoardContainer( loadBoard: any ) {
 		setBoardsArray(newArray);
 	};
 
-	const submitHandler = (e: React.SyntheticEvent) => {
+	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		fetch('http://localhost:3000/boards', {
 			method: 'POST',
