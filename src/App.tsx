@@ -7,7 +7,7 @@ import Drawer from './Components/Drawer';
 function App() {
 	const [images, setImages] = useState([]);
 	const [boardImages, setBoardImages] = useState();
-	const [board, setBoard] = useState(1);
+	const [boardId, setBoardId] = useState(1);
 
 	useEffect(() => {
 		fetch(`http://localhost:3000/images`, {
@@ -16,7 +16,7 @@ function App() {
 		.then((resp) => resp.json())
 		.then((upImages) => setImages(upImages));
 		
-		fetch(`http://localhost:3000/boards/${board}/`, {
+		fetch(`http://localhost:3000/boards/${boardId}/`, {
 			method: 'GET',
 		})
 		.then((resp) => resp.json())
@@ -28,7 +28,7 @@ function App() {
 	};
 
 	const loadBoard = (id: string) => {
-		setBoard(parseInt(id));
+		setBoardId(parseInt(id));
 	};
 
 	const removeImage = (imgId: number) => {
@@ -68,7 +68,7 @@ function App() {
 
 	const removeBoardImage = (stateBoardImgId: string, imgId: number) => {
 		fetch(
-			`http://localhost:3000/boards/${board}/board_images/${parseInt(
+			`http://localhost:3000/boards/${boardId}/board_images/${parseInt(
 				stateBoardImgId
 			)}`,
 			{
@@ -89,13 +89,11 @@ function App() {
 		<>
 			<Drawer loadBoard={loadBoard} />
 			<div>
-				<UploadPane board={board} imgUploaded={imgUploaded} />
+				<UploadPane board={boardId} imgUploaded={imgUploaded} />
 				<ImgBin
-					board={board}
-					removeImageFromBoard={findImageBoardId}
-					boardImages={boardImages}
+					boardId={boardId}
 					images={images}
-					removeImage={removeImage}
+					setImages={setImages}
 				/>
 			</div>
 		</>
