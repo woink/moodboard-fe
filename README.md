@@ -11,6 +11,6 @@
 
 ---
 
-Work in progress Nodejs, Typescript and MongoDB backend located at [/woink/moodboard-node-api](https://github.com/woink/moodboard-node-api)
+Work in progress Nodejs, Typescript and MongoDB backend located [/woink/moodboard-node-api](https://github.com/woink/moodboard-node-api)
 
-Original backend is located at [/woink/moodboard-api](https://github.com/woink/moodboard-api)
+Original backend is located [/woink/moodboard-api](https://github.com/woink/moodboard-api)
