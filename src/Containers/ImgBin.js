@@ -6,17 +6,16 @@ import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';
 import URLImage from '../Components/URLImage'
 
-function ImgBin(props) {
+function ImgBin({boardId, images, setImages}) {
 	const dragUrl = useRef();
 	const dragId = useRef();
 	const stageRef = useRef();
-	const [images, setImages] = useState([]);
 
 	//
 	// LOAD BOARDS
 	//	
 	useEffect(() => {
-		fetch(`http://localhost:3000/boards/${props.board}`)
+		fetch(`http://localhost:3000/boards/${boardId}`)
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
 				findImgUrlID(boardImgArray.board_images);
@@ -49,7 +48,7 @@ function ImgBin(props) {
 			}
 			setImages(newState);
 		};
-	}, [props.board]);
+	}, [boardId]);
 	// ////////////////////////////////////
 
 	//
@@ -85,7 +84,7 @@ function ImgBin(props) {
 				accepts: 'application/json',
 			},
 			body: JSON.stringify({
-				board_id: props.board,
+				board_id: boardId,
 				image_id: imgId,
 				x: stateImg.x,
 				y: stateImg.y,
