@@ -78,7 +78,11 @@ const useStyles = makeStyles((theme) => ({
 	},
 }));
 
-function PersistentDrawerLeft( loadBoard: any ) {
+type Props = {
+	loadBoard: (id: string) => void
+}
+
+function PersistentDrawerLeft( {loadBoard}: Props ) {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [open, setOpen] = useState(false);

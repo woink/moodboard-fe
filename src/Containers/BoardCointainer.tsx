@@ -3,10 +3,10 @@ import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
 
 type Props = {
-	loadBoard: () => void
-}
+	loadBoard: (id: string) => void;
+};
 
-function BoardContainer({loadBoard}: Props) {
+function BoardContainer({ loadBoard }: Props) {
 	const [boardsArray, setBoardsArray] = useState([]);
 	const [title, setTitle] = useState('');
 
