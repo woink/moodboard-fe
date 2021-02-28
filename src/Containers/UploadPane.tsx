@@ -15,6 +15,12 @@ const useStyles = makeStyles((theme) => ({
 	}
 }))
 
+// TODO: fix props here. it's related to App.tsx
+// type Props = {
+// 	imgUploaded: () => void
+
+// }
+
 export default function UploadPane(props: any) {
 	const classes = useStyles()
 	const maxSize = 104576;

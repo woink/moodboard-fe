@@ -23,7 +23,8 @@ function App() {
 		.then((boardImgs) => setBoardImages(boardImgs));
 	}, []);
 	
-	const imgUploaded = (obj: never) => {
+	// FIXME: state only wants never[]
+	const imgUploaded = (obj: TImage) => {
 		setImages([...images, obj]);
 	};
 
@@ -89,7 +90,7 @@ function App() {
 		<>
 			<Drawer loadBoard={loadBoard} />
 			<div>
-				<UploadPane board={boardId} imgUploaded={imgUploaded} />
+				<UploadPane boardId={boardId} imgUploaded={imgUploaded} />
 				<ImgBin
 					boardId={boardId}
 					images={images}
