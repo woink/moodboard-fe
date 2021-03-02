@@ -1,12 +1,11 @@
 import { useState, useEffect } from 'react';
-import './App.css';
 import UploadPane from './Containers/UploadPane';
 import ImgBin from './Containers/ImgBin';
 import Drawer from './Components/Drawer';
 
+
 function App() {
 	const [images, setImages] = useState([]);
-	const [boardImages, setBoardImages] = useState();
 	const [boardId, setBoardId] = useState(1);
 
 	useEffect(() => {
@@ -20,11 +19,10 @@ function App() {
 			method: 'GET',
 		})
 		.then((resp) => resp.json())
-		.then((boardImgs) => setBoardImages(boardImgs));
 	}, []);
 	
-	// FIXME: state only wants never[]
-	const imgUploaded = (obj: TImage) => {
+	// FIXME: state only wants never
+	const imgUploaded = (obj: never) => {
 		setImages([...images, obj]);
 	};
 
@@ -69,7 +67,7 @@ function App() {
 
 	const removeBoardImage = (stateBoardImgId: string, imgId: number) => {
 		fetch(
-			`http://localhost:3000/boards/${boardId}/board_images/${parseInt(
+			`http://localhost:3000/boards/${boardId}/board_images/${Number(
 				stateBoardImgId
 			)}`,
 			{
@@ -92,6 +90,8 @@ function App() {
 			<div>
 				<UploadPane boardId={boardId} imgUploaded={imgUploaded} />
 				<ImgBin
+					removeImage={removeImage}
+					removeImageFromBoard={removeBoardImage}
 					boardId={boardId}
 					images={images}
 					setImages={setImages}
