@@ -7,36 +7,42 @@ const useStyles = makeStyles((theme) => ({
 		'& > *': {
 			margin: theme.spacing(1),
 			justifyContent: 'space-between'
-			
 		},
 	},
 	moodTitle: {
-		// display: 'flex',
 		flexDirection: 'row',
 		marginLeft: '2vw',
 		justifyContent: 'space-between',
 		flex: 1
 	},
 	removeBtn: {
-		// justifyContent: 'flex-end'
+		flexDirection: 'row',
+		marginLeft: '2vw',
+		justifyContent: 'space-between',
+		flex: 1,
 		backgroundColor: 'red'
 	}
 }));
 
-const BoardsList = (props) => {
+type Props = {
+	title: string
+	loadBoard: (board: any) => void
+	removeBoard: (e: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+function BoardsList({title, loadBoard, removeBoard}: Props) {
 	const classes = useStyles();
 
-	const clickHandler = (e) => {
-		props.loadBoard(e.target.parentElement.parentElement.parentElement.id);
+	const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
+		loadBoard(e.target.parentElement.parentElement.parentElement.id);
 	};
 
 	return (
 		<div className={classes.root}>
 			<Button className={classes.moodTitle} color="primary" variant="contained" onClick={clickHandler}>
-				{props.title}
+				{title}
 			</Button>
-			{/* <div flexGrow={1} /> */}
-			<Button className={classes.removeBtn} className={classes.moodTitle} color="#ffebee" variant="contained" onClick={props.removeBoard}>
+			<Button className={classes.removeBtn} variant="contained" onClick={removeBoard}>
 				<DeleteForeverIcon />
 			</Button>
 		</div>

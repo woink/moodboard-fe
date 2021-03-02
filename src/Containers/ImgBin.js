@@ -1,24 +1,21 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import './style.css';
-import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
-import useImage from 'use-image';
-import { Button, Fab } from '@material-ui/core';
+import { useEffect, useRef, useState } from 'react';
+import { Stage, Layer, Rect } from 'react-konva';
+import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';
+import URLImage from '../Components/URLImage'
 
-const ImgBin = (props) => {
+function ImgBin({boardId, images, setImages}) {
 	const dragUrl = useRef();
 	const dragId = useRef();
 	const stageRef = useRef();
-	const [images, setImages] = useState([]);
 
 	//
 	// LOAD BOARDS
-	//
+	//	
 	useEffect(() => {
-		// setImages([]);
-		fetch(`http://localhost:3000/boards/${props.board}`)
+		fetch(`http://localhost:3000/boards/${boardId}`)
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
 				findImgUrlID(boardImgArray.board_images);
@@ -32,10 +29,9 @@ const ImgBin = (props) => {
 		};
 
 		const findMatches = (imgList, boardImgArray) => {
-			let i = 0;
 			let newState = [];
 			if (boardImgArray) {
-				while (i < boardImgArray.length) {
+				for (let i = 0; i < boardImgArray.length; i++) {
 					const imgMatch = imgList.find(
 						(img) => img.id === boardImgArray[i].image_id
 					);
@@ -48,15 +44,13 @@ const ImgBin = (props) => {
 						height: boardImgArray[i].height,
 					};
 					newState.push(newStateObj);
-					i++;
 				}
 			}
 			setImages(newState);
 		};
-	}, [props.board]);
+	}, [boardId]);
 	// ////////////////////////////////////
 
-	console.log('Images State: ', images);
 	//
 	// SAVE IMAGES W/ LOCATION
 	//
@@ -90,7 +84,7 @@ const ImgBin = (props) => {
 				accepts: 'application/json',
 			},
 			body: JSON.stringify({
-				board_id: props.board,
+				board_id: boardId,
 				image_id: imgId,
 				x: stateImg.x,
 				y: stateImg.y,
@@ -106,7 +100,6 @@ const ImgBin = (props) => {
 			headers: {
 				'Content-Type': 'application/json',
 				accepts: 'application/json',
-				// Authorization: `Bearer ${token}`,
 			},
 			body: JSON.stringify({
 				x: stateImg.x,
@@ -138,92 +131,6 @@ const ImgBin = (props) => {
 		downloadURI(dataURL, 'MoodBoard');
 	};
 
-	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
-		const [img] = useImage(image.src, 'Anonymous');
-
-		const shapeRef = useRef();
-		const trRef = useRef();
-
-		useEffect(() => {
-			if (isSelected) {
-				// attach transformer
-				trRef.current.setNode(shapeRef.current);
-				trRef.current.getLayer().batchDraw();
-			}
-		}, [isSelected]);
-		useLayoutEffect(() => {
-			shapeRef.current.cache();
-		}, [shapeProps, img, isSelected]);
-
-		console.log('ShapeRef: ', shapeRef);
-		return (
-			<>
-				<Image
-					image={img}
-					onClick={onSelect}
-					ref={shapeRef}
-					{...shapeProps}
-					x={image.x}
-					y={image.y}
-					offsetX={img ? img.width / 2 : 0}
-					offsetY={img ? img.height / 2 : 0}
-					id="rect1"
-					// use id to remove from state
-					id={image.id}
-					draggable
-					onDragEnd={(e) => {
-						const stateIdx = images.findIndex(
-							(img) => img.src === e.target.attrs.image.currentSrc
-						);
-						const newPos = e.target._lastPos;
-						newPos.src = e.target.attrs.image.currentSrc;
-						console.log(images[stateIdx])
-						images[stateIdx] = newPos;
-						onChange({
-							...shapeProps,
-							x: e.target.x(),
-							y: e.target.y(),
-						});
-					}}
-					// changing the scale but storing as width and height
-					onTransformEnd={(e) => {
-						const node = shapeRef.current;
-						const scaleX = node.scaleX();
-						const scaleY = node.scaleY();
-
-						// set scale back
-						node.scaleX(1);
-						node.scaleY(1);
-						node.width(Math.max(5, node.width() * scaleX));
-						node.height(Math.max(node.height() * scaleY));
-
-						onChange({
-							...shapeProps,
-							x: node.x(),
-							y: node.y(),
-							// set minimal value
-							width: node.width(),
-							height: node.height(),
-						});
-					}}
-				/>
-				{isSelected && (
-					<Transformer
-						rotateEnabled={false}
-						ref={trRef}
-						boundBoxFunc={(oldBox, newBox) => {
-							// limit resize
-							if (newBox.width < 5 || newBox.height < 5) {
-								return oldBox;
-							}
-							return newBox;
-						}}
-					/>
-				)}
-			</>
-		);
-	};
-
 	const renderImages = () => {
 		return props.images.map((img) => {
 			return (
@@ -234,7 +141,6 @@ const ImgBin = (props) => {
 						id={img.id}
 						src={img.src}
 						draggable
-						// onDblClick={onSelect}
 						onDragStart={(e) => {
 							dragUrl.current = e.target.src;
 							dragId.current = parseInt(e.target.id);
@@ -255,7 +161,6 @@ const ImgBin = (props) => {
 							}}
 							id={img.id}
 							label="Remove"
-							size="small"
 						>
 							<RemoveIcon />
 						</Button>
@@ -272,7 +177,6 @@ const ImgBin = (props) => {
 							}}
 							id={img.id}
 							label="Remove"
-							size="small"
 						>
 							<DeleteForeverIcon />
 						</Button>
@@ -353,6 +257,7 @@ const ImgBin = (props) => {
 								return (
 									<URLImage
 										key={i}
+										images={images}
 										image={img}
 										shapeProps={img}
 										isSelected={img.id === selectedId}
@@ -376,12 +281,6 @@ const ImgBin = (props) => {
 };
 
 export default ImgBin;
-
-const imgBinDiv = {
-	// border: '1px solid black',
-	// justifyContent: 'center',
-	// width: "window.innerWidth"
-};
 
 const imgs = {
 	display: 'flex',
