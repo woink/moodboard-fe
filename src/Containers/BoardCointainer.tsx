@@ -34,9 +34,8 @@ function BoardContainer({ loadBoard }: Props) {
 		}
 	};
 
-	const removeBoard = (e: React.MouseEvent<HTMLButtonElement>) => {
-		const boardId =
-			e.target.parentElement.parentElement.parentElement.parentElement.id;
+	const removeBoard = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		const boardId = (e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id
 		console.log(boardId);
 		fetch(`http://localhost:3000/boards/${boardId}`, {
 			method: 'DELETE',
@@ -46,7 +45,7 @@ function BoardContainer({ loadBoard }: Props) {
 			},
 		});
 		const newArray = boardsArray.filter(
-			(stateBoard: any) => stateBoard.id !== parseInt(boardId)
+			(stateBoard: any) => stateBoard.id !== Number(boardId)
 		);
 		console.log(boardId);
 		setBoardsArray(newArray);

@@ -34,7 +34,7 @@ function BoardsList({title, loadBoard, removeBoard}: Props) {
 	const classes = useStyles();
 
 	const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-		loadBoard(e.target.parentElement.parentElement.parentElement.id);
+		loadBoard((e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id);
 	};
 
 	return (
