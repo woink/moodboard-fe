@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	"name": "moodboard-fe",
 	"version": "0.1.0",
 	"private": true,
@@ -58,4 +59,47 @@
 		"pretty-quick": "^3.1.0",
 		"typescript": "^4.1.5"
 	}
+=======
+  "name": "moodboard-fe",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "konva": "^7.1.3",
+    "pure": "^2.85.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-dropzone": "^11.2.0",
+    "react-konva": "^16.13.0-6",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.4",
+    "recompose": "^0.17.0",
+    "use-image": "^1.0.6"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+>>>>>>> 897f2b35ccf9b3e5cfd4ac07b008cba678390627
 }

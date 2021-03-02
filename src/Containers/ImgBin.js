@@ -1,5 +1,12 @@
+<<<<<<< HEAD:src/Containers/ImgBin.js
 import { useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
+=======
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import './style.css';
+import { Image, Stage, Layer, Transformer, Rect } from 'react-konva';
+import useImage from 'use-image';
+>>>>>>> 897f2b35ccf9b3e5cfd4ac07b008cba678390627:src/ImgBin.js
 import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -131,6 +138,95 @@ function ImgBin({boardId, images, setImages}) {
 		downloadURI(dataURL, 'MoodBoard');
 	};
 
+<<<<<<< HEAD:src/Containers/ImgBin.js
+=======
+	const URLImage = ({ image, shapeProps, isSelected, onSelect, onChange }) => {
+		const [img] = useImage(image.src, 'Anonymous');
+
+		const shapeRef = useRef();
+		const trRef = useRef();
+
+		useEffect(() => {
+			if (isSelected) {
+				// attach transformer
+				trRef.current.setNode(shapeRef.current);
+				trRef.current.getLayer().batchDraw();
+			}
+		}, [isSelected]);
+		useLayoutEffect(() => {
+			shapeRef.current.cache();
+		}, [shapeProps, img, isSelected]);
+
+		console.log('ShapeRef: ', shapeRef);
+		return (
+			<>
+				<Image
+					image={img}
+					onClick={onSelect}
+					ref={shapeRef}
+					{...shapeProps}
+					x={image.x}
+					y={image.y}
+					offsetX={img ? img.width / 2 : 0}
+					offsetY={img ? img.height / 2 : 0}
+					id="rect1"
+					// use id to remove from state
+					id={image.id}
+					draggable
+					onDragEnd={(e) => {
+						const stateIdx = images.findIndex(
+							(img) => img.src === e.target.attrs.image.currentSrc
+						);
+						const newPos = e.target._lastPos;
+						newPos.src = e.target.attrs.image.currentSrc;
+						console.log(images[stateIdx]);
+						images[stateIdx] = newPos;
+						onChange({
+							...shapeProps,
+							x: e.target.x(),
+							y: e.target.y(),
+						});
+					}}
+					// changing the scale but storing as width and height
+					onTransformEnd={(e) => {
+						const node = shapeRef.current;
+						const scaleX = node.scaleX();
+						const scaleY = node.scaleY();
+
+						// set scale back
+						node.scaleX(1);
+						node.scaleY(1);
+						node.width(Math.max(5, node.width() * scaleX));
+						node.height(Math.max(node.height() * scaleY));
+
+						onChange({
+							...shapeProps,
+							x: node.x(),
+							y: node.y(),
+							// set minimal value
+							width: node.width(),
+							height: node.height(),
+						});
+					}}
+				/>
+				{isSelected && (
+					<Transformer
+						rotateEnabled={false}
+						ref={trRef}
+						boundBoxFunc={(oldBox, newBox) => {
+							// limit resize
+							if (newBox.width < 5 || newBox.height < 5) {
+								return oldBox;
+							}
+							return newBox;
+						}}
+					/>
+				)}
+			</>
+		);
+	};
+
+>>>>>>> 897f2b35ccf9b3e5cfd4ac07b008cba678390627:src/ImgBin.js
 	const renderImages = () => {
 		return props.images.map((img) => {
 			return (
