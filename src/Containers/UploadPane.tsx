@@ -1,5 +1,6 @@
 import Button from '@material-ui/core/Button';
 import { makeStyles} from '@material-ui/core';
+import { useState } from 'react';
 
 const useStyles = makeStyles((theme) => ({
 	root: {
@@ -21,30 +22,39 @@ const useStyles = makeStyles((theme) => ({
 
 // }
 
-export default function UploadPane(props: any) {
+type Props = {
+	imgUploaded: any
+	boardId: number
+}
+
+export default function UploadPane({imgUploaded}: Props) {
+	const [fileInputState, setFileInputState] = useState('')
+	const [selectedFile, setSelectedFile] = useState<Blob>()
+	const [successMsg, setSuccessMsg] = useState('')
+	const [errMsg, setErrMsg] = useState('')
 	const classes = useStyles()
-	const maxSize = 104576;
 
-	const handleUploadSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+	const handleImageInputChange = (e) => {
+		const file = e.target.files[0]
+		setSelectedFile(file)
+		setFileInputState(e.target.value)
+	}
+
+	const handleSubmitImage = (e: React.ChangeEvent<HTMLInputElement>) => {
 		e.preventDefault();
-
-		const files = e.target.files;
-
-		if (files) {
-			for (const file of files) {
-				const formData = new FormData();
-				formData.append('img_src', file);
-				fetch('http://localhost:3000/images', {
-					method: 'POST',
-					body: formData,
-				})
-					.then((resp) => resp.json())
-					.then((newImage) => {
-						props.imgUploaded(newImage);
-					});
-			}
+		if (!selectedFile) return
+		const reader = new FileReader()
+		reader.readAsDataURL(selectedFile)
+		reader.onloadend = () => {
+			uploadImage(reader.result)
+		}
+		reader.onerror = () => {
+			console.error('Image upload error')
+			setErrMsg('Image upload Error')
 		}
 	};
+	
+	// TODO: uploadImage function 
 
 	return (
 		<div className={classes.removeBtn}>
@@ -55,7 +65,7 @@ export default function UploadPane(props: any) {
 						accept="image/*"
 						id="image-upload"
 						multiple={true}
-						onChange={handleUploadSubmit}
+						onChange={handleSubmitImage}
 						style={{ display: 'none' }}
 				/>
 
