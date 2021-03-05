@@ -1,5 +1,3 @@
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core';
 import { useState } from 'react';
 import { makeStyles, Button } from '@material-ui/core';
 import { DropzoneDialog } from 'material-ui-dropzone';
@@ -8,31 +6,27 @@ const useStyles = makeStyles((theme: any) => ({
 	root: {
 		margin: theme.spacing(1),
 		display: 'flex',
-	},
-	removeBtn: {
-		marginTop: '1.5vh',
-		marginLeft: '15vw',
-		justifyContent: 'center',
-		alignItems: 'stretch',
-	},
+	}
 }));
-
-// TODO: fix props here. it's related to App.tsx
-// type Props = {
-// 	imgUploaded: () => void
-
-// }
 
 type Props = {
 	imgUploaded: any;
 	boardId: number;
 };
 
+// type TImage = {
+// 	lastModified: number;
+// 	lastModifiedDate: Date;
+// 	name: string;
+// 	path: string;
+// 	size: number;
+// 	webkitRelativePath: string;
+// };
+
 export default function UploadPane({ imgUploaded }: Props) {
 	const [open, setOpen] = useState(false);
 	const [errMsg, setErrMsg] = useState('');
 	const [successMsg, setSuccessMsg] = useState('');
-	const [errMsg, setErrMsg] = useState('');
 	const classes = useStyles();
 
 	const handleSubmitImage = (file: any) => {
