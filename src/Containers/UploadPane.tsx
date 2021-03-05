@@ -1,6 +1,8 @@
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core';
 import { useState } from 'react';
+import { makeStyles, Button } from '@material-ui/core';
+import { DropzoneDialog } from 'material-ui-dropzone';
 
 const useStyles = makeStyles((theme: any) => ({
 	root: {
@@ -72,26 +74,32 @@ export default function UploadPane({ imgUploaded }: Props) {
 	};
 
 	return (
-		<div className={classes.removeBtn}>
-			<label className={classes.removeBtn} htmlFor="image-upload">
-				<input
-					type="file"
-					accept="image/*"
-					id="image-upload"
-					multiple={false}
-					value={fileInputState}
-					onChange={handleSubmitImage}
-					style={{ display: 'none' }}
-				/>
+		<>
+			<Button
+				className={classes.root}
+				variant="contained"
+				color="primary"
+				onClick={() => setOpen(true)}
+			>
+				Add Images
+			</Button>
 
-				<Button
-					className={classes.removeBtn}
-					component="span"
-					variant="contained"
-				>
-					Upload Images
-				</Button>
-			</label>
-		</div>
+			<DropzoneDialog
+				acceptedFiles={['image/*']}
+				cancelButtonText={'cancel'}
+				submitButtonText={'submit'}
+				clearOnUnmount={false}
+				maxFileSize={50000000}
+				open={open}
+				onClose={() => setOpen(false)}
+				onSave={(file) => {
+					console.log('onSave: ', file);
+					handleSubmitImage(file);
+					setOpen(false);
+				}}
+				showPreviews={true}
+				showFileNamesInPreview={true}
+			/>
+		</>
 	);
 }
