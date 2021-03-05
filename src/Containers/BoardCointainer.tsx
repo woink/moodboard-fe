@@ -11,7 +11,7 @@ function BoardContainer({ loadBoard }: Props) {
 	const [title, setTitle] = useState('');
 
 	useEffect(() => {
-		fetch('http://localhost:3000/boards', {})
+		fetch('/api/v1/boards', {})
 			.then((resp) => resp.json())
 			.then((boards) => setBoardsArray(boards));
 	}, []);
@@ -37,7 +37,7 @@ function BoardContainer({ loadBoard }: Props) {
 	const removeBoard = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
 		const boardId = (e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id
 		console.log(boardId);
-		fetch(`http://localhost:3000/boards/${boardId}`, {
+		fetch(`/api/v1/boards/${boardId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ function BoardContainer({ loadBoard }: Props) {
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		fetch('http://localhost:3000/boards', {
+		fetch('/api/v1/boards/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

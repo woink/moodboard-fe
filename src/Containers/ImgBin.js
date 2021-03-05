@@ -15,13 +15,13 @@ function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage})
 	// LOAD BOARDS
 	//	
 	useEffect(() => {
-		fetch(`http://localhost:3000/boards/${boardId}`)
+		fetch(`/api/v1/boards/${boardId}`)
 			.then((resp) => resp.json())
 			.then((boardImgArray) => {
 				findImgUrlID(boardImgArray.board_images);
 			});
 		const findImgUrlID = (boardImgArray) => {
-			fetch(`http://localhost:3000/images`)
+			fetch(`/api/v1/images`)
 				.then((resp) => resp.json())
 				.then((imgList) => {
 					findMatches(imgList, boardImgArray);

@@ -9,13 +9,13 @@ function App() {
 	const [boardId, setBoardId] = useState(1);
 
 	useEffect(() => {
-		fetch(`http://localhost:3000/images`, {
+		fetch(`/api/v1/images/`, {
 			method: 'GET',
 		})
 		.then((resp) => resp.json())
 		.then((upImages) => setImages(upImages));
 		
-		fetch(`http://localhost:3000/boards/${boardId}/`, {
+		fetch(`/api/v1/boards/${boardId}/`, {
 			method: 'GET',
 		})
 		.then((resp) => resp.json())
@@ -32,7 +32,7 @@ function App() {
 
 	const removeImage = (imgId: number) => {
 		console.log(imgId);
-		fetch(`http://localhost:3000/images/${imgId}`, {
+		fetch(`/api/v1/images/${imgId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -67,7 +67,7 @@ function App() {
 
 	const removeBoardImage = (stateBoardImgId: string, imgId: number) => {
 		fetch(
-			`http://localhost:3000/boards/${boardId}/board_images/${Number(
+			`/api/v1/boards/${boardId}/board_images/${Number(
 				stateBoardImgId
 			)}`,
 			{
