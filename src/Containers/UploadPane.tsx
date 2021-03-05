@@ -29,32 +29,15 @@ type Props = {
 };
 
 export default function UploadPane({ imgUploaded }: Props) {
-	const [fileInputState, setFileInputState] = useState('');
-	const [selectedFile, setSelectedFile] = useState<Blob>();
+	const [open, setOpen] = useState(false);
+	const [errMsg, setErrMsg] = useState('');
 	const [successMsg, setSuccessMsg] = useState('');
 	const [errMsg, setErrMsg] = useState('');
 	const classes = useStyles();
 
-	const handleImageInputChange = (e: any) => {
-		e.preventDefault()
-		const file = e.target.files[0];
-		setSelectedFile(file);
-		setFileInputState(e.target.value);
-	};
-
-	// const createImageSource = (file: any) => {
-	// 	const reader = new FileReader()
-	// 	reader.readAsDataURL(file)
-	// 	reader.onloadend = () => {
-
-	// 	}
-	// }
-
-	const handleSubmitImage = (e: React.ChangeEvent<HTMLInputElement>) => {
-		e.preventDefault();
-		if (!selectedFile) return;
+	const handleSubmitImage = (file: any) => {
 		const reader = new FileReader();
-		reader.readAsDataURL(selectedFile);
+		reader.readAsDataURL(file[0]);
 		reader.onloadend = () => {
 			uploadImage(reader.result);
 		};
@@ -64,13 +47,19 @@ export default function UploadPane({ imgUploaded }: Props) {
 		};
 	};
 
-	// TODO: uploadImage function
-	const uploadImage = async (
-		base64EncodedImage: string | ArrayBuffer | null
-	) => {
-		// try {
-		// 	await fetch('')
-		// }
+	const uploadImage = async (base64EncodedImage: any) => {
+		try {
+			await fetch('http://localhost:5000/api/v1/images/upload', {
+				method: 'POST',
+				body: JSON.stringify({ data: base64EncodedImage }),
+				headers: { 'Content-Type': 'application/json' },
+			});
+			console.log('good')
+			setSuccessMsg('Image uploaded successfully')
+		} catch (error) {
+			console.error(error);
+			setErrMsg('Something went wrong');
+		}
 	};
 
 	return (
