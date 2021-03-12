@@ -35,12 +35,17 @@ function BoardsList({title, loadBoard, removeBoard, boardId}: Props) {
 	const classes = useStyles();
 
 	const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
-		loadBoard((e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id);
+		const selectedBoard = e.currentTarget.dataset.boardid
+		if (selectedBoard) {
+			loadBoard(selectedBoard)
+		} else {
+			throw new Error('Board not found')
+		}
 	};
 
 	return (
 		<div className={classes.root}>
-			<Button className={classes.moodTitle} color="primary" variant="contained" onClick={clickHandler}>
+			<Button data-boardid={boardId} className={classes.moodTitle} color="primary" variant="contained" onClick={clickHandler}>
 				{title}
 			</Button>
 			<Button className={classes.removeBtn} data-boardid={boardId} variant="contained" onClick={removeBoard}>
