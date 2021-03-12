@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Typography, TextField } from '@material-ui/core';
+import { Typography, TextField} from '@material-ui/core';
 import BoardsList from './BoardsList';
 import chalk from 'chalk'
 import axios from 'axios'
 
-// TODO: check if using props correctly
 type Props = {
 	loadBoard: (id: string) => void;
 };
@@ -18,22 +17,21 @@ function BoardContainer({ loadBoard }: Props) {
 	const [boardsArray, setBoardsArray] = useState<TBoard[]>([]);
 	const [title, setTitle] = useState('');
 
+	// load all boards when drawer is opened
 	useEffect(() => {
 		(async function fetchBoards() {
 			const response = await axios('/boards')
 			setBoardsArray(response.data)
 		})()
-		setNewBoardState(false)
-	}, [newBoardState]);
+	}, []);
 
 	const renderBoards = () => {
-		const boards: any[] = boardsArray;
-		if (boards.length > 0) {
-			return boards.map((board) => {
+			return boardsArray!.map((board) => {
 				return (
-					<div id={board.id}>
+					<div id={board._id}>
 						<BoardsList
-							key={board.id}
+							key={board._id}
+							boardId={board._id}
 							title={board.title}
 							loadBoard={loadBoard}
 							removeBoard={removeBoard}
@@ -41,30 +39,37 @@ function BoardContainer({ loadBoard }: Props) {
 					</div>
 				);
 			});
+		// }
+	};
+
+	const removeBoard = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		const boardId = (e.currentTarget as HTMLElement).dataset.boardid
+		try {
+			const response = await axios.delete(`/boards/${boardId}`)
+			const newBoardsArray = boardsArray.filter((el) => el._id !== response.data._id)
+			setBoardsArray(newBoardsArray)
+		} catch (error) {
+			console.error(chalk.red(error.message))
 		}
 	};
 
-			console.error(chalk.red(error.message))
-	};
+	const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		try {
+			const response = await axios.post('/boards/create', {
+					title: title
+			})
+			const newBoard = response.data
+			setBoardsArray([...boardsArray, newBoard])
 
-	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		fetch('/boards/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				accepts: 'application/json',
-			},
-			body: JSON.stringify({
-				user_id: 1,
-				title: title,
-			}),
-		})
+			setTitle('')
 		} catch (error) {
 				console.log(chalk.red(error))
 		}
+	}
 
 	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		console.log(e.target.value)
 		setTitle(e.target.value);
 	};
 

@@ -23,7 +23,7 @@ type Props = {
 // 	webkitRelativePath: string;
 // };
 
-export default function UploadPane({ imgUploaded }: Props) {
+export default function UploadPane({ imgUploaded, boardId }: Props) {
 	const [open, setOpen] = useState(false);
 	const [errMsg, setErrMsg] = useState('');
 	const [successMsg, setSuccessMsg] = useState('');
@@ -49,6 +49,7 @@ export default function UploadPane({ imgUploaded }: Props) {
 				headers: { 'Content-Type': 'application/json' },
 			});
 			setSuccessMsg('Image uploaded successfully')
+			imgUploaded()
 		} catch (error) {
 			console.error(error);
 			setErrMsg('Something went wrong');

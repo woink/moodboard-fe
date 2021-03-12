@@ -26,11 +26,12 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
 	title: string
+	boardId: string
 	loadBoard: (board: any) => void
 	removeBoard: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-function BoardsList({title, loadBoard, removeBoard}: Props) {
+function BoardsList({title, loadBoard, removeBoard, boardId}: Props) {
 	const classes = useStyles();
 
 	const clickHandler = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -42,7 +43,7 @@ function BoardsList({title, loadBoard, removeBoard}: Props) {
 			<Button className={classes.moodTitle} color="primary" variant="contained" onClick={clickHandler}>
 				{title}
 			</Button>
-			<Button className={classes.removeBtn} variant="contained" onClick={removeBoard}>
+			<Button className={classes.removeBtn} data-boardid={boardId} variant="contained" onClick={removeBoard}>
 				<DeleteForeverIcon />
 			</Button>
 		</div>

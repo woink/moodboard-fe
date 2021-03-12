@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
 import { Button } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
-import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import Paper from '@material-ui/core/Paper';
 import URLImage from '../Components/URLImage'
 
@@ -55,10 +54,12 @@ function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage})
 	// SAVE IMAGES W/ LOCATION
 	//
 	const prepImgsForSave = () => {
-		images.forEach((img) => findBoardImageId(img.id, img));
+		images.forEach((img) => findImageId(img.id, img));
 	};
 
-	const findBoardImageId = (imgId, stateImg) => {
+
+// FIXME: add image lookup by id
+	const findImageId = (imgId, stateImg) => {
 		fetch('http://localhost:3000/board_images/', {
 			method: 'GET',
 		})
@@ -68,48 +69,13 @@ function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage})
 					(boardImg) =>
 						boardImg.image_id === imgId && boardImg.board_id === boardId
 				);
-				if (boardImage) {
-					saveImgBoardState(boardImage.id, stateImg);
-				} else {
-					createImageAssociation(imgId, stateImg);
-				}
+				// if (boardImage) {
+				// 	saveImgBoardState(boardImage.id, stateImg);
+				// } else {
+				// 	createImageAssociation(imgId, stateImg);
+				// }
 			});
 	};
-
-	const createImageAssociation = (imgId, stateImg) => {
-		fetch('http://localhost:3000/board_images/', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				accepts: 'application/json',
-			},
-			body: JSON.stringify({
-				board_id: boardId,
-				image_id: imgId,
-				x: stateImg.x,
-				y: stateImg.y,
-				width: stateImg.width,
-				height: stateImg.height,
-			}),
-		});
-	};
-
-	const saveImgBoardState = (boardImgId, stateImg) => {
-		fetch(`http://localhost:3000/board_images/${boardImgId}`, {
-			method: 'PATCH',
-			headers: {
-				'Content-Type': 'application/json',
-				accepts: 'application/json',
-			},
-			body: JSON.stringify({
-				x: stateImg.x,
-				y: stateImg.y,
-				width: stateImg.width,
-				height: stateImg.height,
-			}),
-		}).then((resp) => resp.json());
-	};
-	// ////////////////////////////////////
 
 	const downloadURI = (uri, name) => {
 		const link = document.createElement('a');
@@ -149,26 +115,10 @@ function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage})
 					<div style={removeButtons}>
 						<Button
 							size="small"
-							color="secondary"
-							aria-label="remove"
 							variant="contained"
 							onClick={(e) => {
-								const imgId = parseInt(e.currentTarget.id);
-								console.log(imgId);
-								removeImageFromBoard(imgId);
-								const newArray = images.filter((image) => image.id !== imgId);
-								setImages(newArray);
-							}}
-							id={img.id}
-							label="Remove"
-						>
-							<RemoveIcon />
-						</Button>
-						<Button
-							size="small"
-							variant="contained"
-							onClick={(e) => {
-								console.log(e.currentTarget.id);
+								// FIXME: not getting the right id
+								console.log("e.currentTarget: ", e.currentTarget);
 								const imgId = parseInt(e.currentTarget.id);
 								removeImage(imgId);
 								console.log(imgId);
@@ -178,7 +128,7 @@ function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage})
 							id={img.id}
 							label="Remove"
 						>
-							<DeleteForeverIcon />
+							<RemoveIcon />
 						</Button>
 					</div>
 				</div>
