@@ -28,7 +28,6 @@ function BoardContainer({ loadBoard }: Props) {
 	const renderBoards = () => {
 			return boardsArray!.map((board) => {
 				return (
-					<div id={board._id}>
 						<BoardsList
 							key={board._id}
 							boardId={board._id}
@@ -36,10 +35,8 @@ function BoardContainer({ loadBoard }: Props) {
 							loadBoard={loadBoard}
 							removeBoard={removeBoard}
 						/>
-					</div>
 				);
 			});
-		// }
 	};
 
 	const removeBoard = async (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -61,7 +58,6 @@ function BoardContainer({ loadBoard }: Props) {
 			})
 			const newBoard = response.data
 			setBoardsArray([...boardsArray, newBoard])
-
 			setTitle('')
 		} catch (error) {
 				console.log(chalk.red(error))
@@ -69,7 +65,6 @@ function BoardContainer({ loadBoard }: Props) {
 	}
 
 	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		console.log(e.target.value)
 		setTitle(e.target.value);
 	};
 
@@ -91,7 +86,6 @@ function BoardContainer({ loadBoard }: Props) {
 					/>
 				</form>
 			</div>
-
 			{renderBoards()}
 		</>
 	);
