@@ -1,34 +1,18 @@
 import { useState } from 'react';
 import { TextField } from '@material-ui/core';
+import axios from 'axios';
 
 function CreateBoard() {
 	const [title, setTitle] = useState('');
 	const [submitted, setSubmitted] = useState(false);
 
-	const submitHandler = (e: React.SyntheticEvent) => {
+	const submitHandler = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
-
-		fetch('/boards', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				accepts: 'application/json',
-			},
-			body: JSON.stringify({
+			await axios.post('/boards', {
 				user_id: 1,
-				title: title,
-			}),
-		})
-			.then((resp) => resp.json())
-			.then((newBoard) => {
-				console.log('post new board', newBoard);
-				setSubmitted(false);
-				setTitle('');
-			});
-	};
-
-	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTitle(e.target.value);
+				title: title
+			})
+			setTitle('')
 	};
 
 	return (
