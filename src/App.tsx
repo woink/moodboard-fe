@@ -45,28 +45,7 @@ function App() {
 			.then(() => {
 				setImages(images);
 			})
-			.then(findImageBoardId(imgId));
-	};
-
-	const findImageBoardId = (imgId: number): any => {
-		fetch(`http://localhost:3000/board_images`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-				Accepts: 'application/json',
-			},
-		})
-			.then((resp) => resp.json())
-			.then((boardImgArray) => {
-				const stateBoardImgId = boardImgArray.find(
-					(boardImg: any) => boardImg.image_id === imgId
-				);
-				if (stateBoardImgId) {
-					removeBoardImage(stateBoardImgId.id, imgId);
-				}
-				console.log('Found BoardImage', stateBoardImgId);
-			});
-	};
+	};	
 
 	const removeBoardImage = (stateBoardImgId: string, imgId: number) => {
 		fetch(
