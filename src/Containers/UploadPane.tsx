@@ -48,13 +48,17 @@ export default function UploadPane({ imgUploaded }: Props) {
 				body: JSON.stringify({ data: base64EncodedImage }),
 				headers: { 'Content-Type': 'application/json' },
 			});
-			console.log('good')
 			setSuccessMsg('Image uploaded successfully')
 		} catch (error) {
 			console.error(error);
 			setErrMsg('Something went wrong');
 		}
 	};
+
+	// TODO: after upload need to then fetch new images and populate the div
+		// maybe add a boolean state to image div
+			// when new images set newImageState to true
+				// this initiates a refresh then sets state back to false
 
 	return (
 		<>
