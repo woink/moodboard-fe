@@ -7,6 +7,7 @@ import Drawer from './Components/Drawer';
 function App() {
 	const [images, setImages] = useState([]);
 	const [boardId, setBoardId] = useState(1);
+	const [imageUploaded, setImageUploaded] = useState(false)
 
 	useEffect(() => {
 		fetch(`/images/`, {
@@ -19,11 +20,12 @@ function App() {
 			method: 'GET',
 		})
 			.then((resp) => resp.json())
-	}, []);
+		setImageUploaded(false)
+	}, [imageUploaded]);
 	
 	// FIXME: state only wants never
-	const imgUploaded = (obj: never) => {
-		setImages([...images, obj]);
+	const imgUploaded = () => {
+		setImageUploaded(true);
 	};
 
 	const loadBoard = (id: string) => {
