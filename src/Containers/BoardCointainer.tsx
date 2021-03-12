@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, TextField, makeStyles } from '@material-ui/core';
 import BoardsList from './BoardsList';
+import chalk from 'chalk';
 import axios from 'axios';
 
 // CSS styles

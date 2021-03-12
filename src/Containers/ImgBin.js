@@ -5,7 +5,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 import Paper from '@material-ui/core/Paper';
 import URLImage from '../Components/URLImage'
 
-function ImgBin({boardId, images, setImages, removeImageFromBoard, removeImage}) {
+function ImgBin({boardId, images, setImages, removeImage}) {
 	const dragUrl = useRef();
 	const dragId = useRef();
 	const stageRef = useRef();

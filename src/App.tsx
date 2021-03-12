@@ -72,8 +72,8 @@ function App() {
 			<div>
 				<UploadPane boardId={boardId} imgUploaded={imgUploaded} />
 				<ImgBin
+					// TODO: use only one remove
 					removeImage={removeImage}
-					removeImageFromBoard={removeBoardImage}
 					boardId={boardId}
 					images={images}
 					setImages={setImages}
