@@ -4,7 +4,6 @@ import axios from 'axios';
 
 function CreateBoard() {
 	const [title, setTitle] = useState('');
-	const [submitted, setSubmitted] = useState(false);
 
 	const submitHandler = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
