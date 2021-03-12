@@ -1,9 +1,30 @@
-import { useState, useEffect } from 'react';
-import { Typography, TextField} from '@material-ui/core';
+import { Typography, TextField, makeStyles } from '@material-ui/core';
 import BoardsList from './BoardsList';
 import chalk from 'chalk'
 import axios from 'axios'
 
+// CSS styles
+const useStyles = makeStyles((theme: any) => ({
+	root: {
+		'& > *': {
+			display: 'flex'
+		},
+	},
+	titleStyle: {
+		display: 'flex',
+		justifyContent: 'center',
+		marginTop: '3vh',
+	},
+	textField: {
+		justifyContent: 'center'
+	},
+	form: {
+		display: 'flex',
+		justifyContent: 'center',
+		marginTop: '2vh',
+		marginBottom: '1vh',
+	}
+}))
 type Props = {
 	loadBoard: (id: string) => void;
 };
@@ -16,6 +37,7 @@ type TBoard = {
 function BoardContainer({ loadBoard }: Props) {
 	const [boardsArray, setBoardsArray] = useState<TBoard[]>([]);
 	const [title, setTitle] = useState('');
+	const classes = useStyles()
 
 	// load all boards when drawer is opened
 	useEffect(() => {
@@ -70,17 +92,18 @@ function BoardContainer({ loadBoard }: Props) {
 
 	return (
 		<>
-			<Typography variant="h6" style={titleStyle} gutterBottom={false}>
+			<Typography variant="h6" className={classes.titleStyle} gutterBottom={false}>
 				Create Board
 			</Typography>
-			<div style={form}>
+			<div className={classes.form}>
 				<form onSubmit={submitHandler}>
 					<TextField
 						required
 						label="Title"
 						variant="outlined"
 						size="small"
-						onChange={changeHandler}
+						className={classes.textField}
+						label="Title"
 						value={title}
 						style={textField}
 					/>
