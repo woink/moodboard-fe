@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
+import chalk from 'chalk'
 import axios from 'axios'
 
 // TODO: check if using props correctly
@@ -43,22 +44,7 @@ function BoardContainer({ loadBoard }: Props) {
 		}
 	};
 
-	const removeBoard = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-		// FIXME: needs to be a better way of finding id of board instead of so many pE's
-		const boardId = (e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id
-		console.log(boardId);
-		fetch(`/boards/${boardId}`, {
-			method: 'DELETE',
-			headers: {
-				'Content-Type': 'application/json',
-				Accepts: 'application/json',
-			},
-		});
-		const newArray = boardsArray.filter(
-			(stateBoard: any) => stateBoard.id !== Number(boardId)
-		);
-		console.log(boardId);
-		setBoardsArray(newArray);
+			console.error(chalk.red(error.message))
 	};
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
@@ -74,14 +60,9 @@ function BoardContainer({ loadBoard }: Props) {
 				title: title,
 			}),
 		})
-			.then((resp) => resp.json())
-			.then((board) => {
-				console.log(board);
-				const newBoardsArray: any = [...boardsArray, board];
-				setBoardsArray(newBoardsArray);
-				setTitle('');
-			});
-	};
+		} catch (error) {
+				console.log(chalk.red(error))
+		}
 
 	const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setTitle(e.target.value);
