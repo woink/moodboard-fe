@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: any) => ({
 
 type Props = {
 	imgUploaded: any;
-	boardId: number;
+	boardId: string;
 };
 
 // type TImage = {

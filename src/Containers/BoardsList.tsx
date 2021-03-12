@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 type Props = {
 	title: string
 	boardId: string
-	loadBoard: (board: any) => void
+	loadBoard: (board: string) => void
 	removeBoard: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 

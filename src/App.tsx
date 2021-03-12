@@ -6,7 +6,7 @@ import Drawer from './Components/Drawer';
 
 function App() {
 	const [images, setImages] = useState([]);
-	const [boardId, setBoardId] = useState(1);
+	const [boardId, setBoardId] = useState('');
 	const [imageUploaded, setImageUploaded] = useState(false)
 
 	useEffect(() => {
@@ -29,7 +29,7 @@ function App() {
 	};
 
 	const loadBoard = (id: string) => {
-		setBoardId(parseInt(id));
+		setBoardId(id);
 	};
 
 		// FIXME: Lookup to mongodb
