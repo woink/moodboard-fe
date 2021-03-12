@@ -25,14 +25,16 @@ const useStyles = makeStyles((theme: any) => ({
 		marginBottom: '1vh',
 	}
 }))
+
+// Container Types
 type Props = {
 	loadBoard: (id: string) => void;
 };
 
 type TBoard = {
-	_id: string
-	title: string
-}
+	_id: string;
+	title: string;
+};
 
 function BoardContainer({ loadBoard }: Props) {
 	const [boardsArray, setBoardsArray] = useState<TBoard[]>([]);
