@@ -8,8 +8,13 @@ type Props = {
 	loadBoard: (id: string) => void;
 };
 
+type TBoard = {
+	_id: string
+	title: string
+}
+
 function BoardContainer({ loadBoard }: Props) {
-	const [boardsArray, setBoardsArray] = useState([]);
+	const [boardsArray, setBoardsArray] = useState<TBoard[]>([]);
 	const [title, setTitle] = useState('');
 
 	useEffect(() => {
