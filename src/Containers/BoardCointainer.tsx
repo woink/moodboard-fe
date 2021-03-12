@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
+import axios from 'axios'
 
 // TODO: check if using props correctly
 type Props = {
@@ -12,10 +13,12 @@ function BoardContainer({ loadBoard }: Props) {
 	const [title, setTitle] = useState('');
 
 	useEffect(() => {
-		fetch('/boards', {})
-			.then((resp) => resp.json())
-			.then((boards) => setBoardsArray(boards));
-	}, []);
+		(async function fetchBoards() {
+			const response = await axios('/boards')
+			setBoardsArray(response.data)
+		})()
+		setNewBoardState(false)
+	}, [newBoardState]);
 
 	const renderBoards = () => {
 		const boards: any[] = boardsArray;
