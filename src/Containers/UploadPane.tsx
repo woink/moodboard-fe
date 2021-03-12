@@ -43,7 +43,7 @@ export default function UploadPane({ imgUploaded }: Props) {
 
 	const uploadImage = async (base64EncodedImage: any) => {
 		try {
-			await fetch('/api/v1/images/upload', {
+			await fetch('/images/upload', {
 				method: 'POST',
 				body: JSON.stringify({ data: base64EncodedImage }),
 				headers: { 'Content-Type': 'application/json' },

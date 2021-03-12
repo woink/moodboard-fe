@@ -9,16 +9,16 @@ function App() {
 	const [boardId, setBoardId] = useState(1);
 
 	useEffect(() => {
-		fetch(`/api/v1/images/`, {
+		fetch(`/images/`, {
 			method: 'GET',
 		})
 		.then((resp) => resp.json())
 		.then((upImages) => setImages(upImages));
 		
-		fetch(`/api/v1/boards/${boardId}/`, {
+		fetch(`/boards/${boardId}/`, {
 			method: 'GET',
 		})
-		.then((resp) => resp.json())
+			.then((resp) => resp.json())
 	}, []);
 	
 	// FIXME: state only wants never
@@ -30,9 +30,10 @@ function App() {
 		setBoardId(parseInt(id));
 	};
 
+		// FIXME: Lookup to mongodb
 	const removeImage = (imgId: number) => {
 		console.log(imgId);
-		fetch(`/api/v1/images/${imgId}`, {
+		fetch(`/images/${imgId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -67,14 +68,14 @@ function App() {
 
 	const removeBoardImage = (stateBoardImgId: string, imgId: number) => {
 		fetch(
-			`/api/v1/boards/${boardId}/board_images/${Number(
+			`/boards/${boardId}/board_images/${Number(
 				stateBoardImgId
 			)}`,
 			{
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
-					Accepts: 'application/json',
+					'Accepts': 'application/json',
 				},
 			}
 		);

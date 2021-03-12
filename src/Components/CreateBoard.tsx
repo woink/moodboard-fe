@@ -8,7 +8,7 @@ function CreateBoard() {
 	const submitHandler = (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		fetch('http://localhost:3000/boards', {
+		fetch('/boards', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

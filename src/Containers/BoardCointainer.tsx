@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Typography, TextField } from '@material-ui/core';
 import BoardsList from './BoardsList';
 
+// TODO: check if using props correctly
 type Props = {
 	loadBoard: (id: string) => void;
 };
@@ -11,7 +12,7 @@ function BoardContainer({ loadBoard }: Props) {
 	const [title, setTitle] = useState('');
 
 	useEffect(() => {
-		fetch('/api/v1/boards', {})
+		fetch('/boards', {})
 			.then((resp) => resp.json())
 			.then((boards) => setBoardsArray(boards));
 	}, []);
@@ -35,9 +36,10 @@ function BoardContainer({ loadBoard }: Props) {
 	};
 
 	const removeBoard = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		// FIXME: needs to be a better way of finding id of board instead of so many pE's
 		const boardId = (e.target as HTMLElement).parentElement!.parentElement!.parentElement!.id
 		console.log(boardId);
-		fetch(`/api/v1/boards/${boardId}`, {
+		fetch(`/boards/${boardId}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -53,7 +55,7 @@ function BoardContainer({ loadBoard }: Props) {
 
 	const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		fetch('/api/v1/boards/', {
+		fetch('/boards/', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
