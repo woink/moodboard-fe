@@ -21,7 +21,9 @@ function CreateBoard() {
 				<TextField
 					required
 					label="Title"
-					onChange={changeHandler}
+					onChange={(e: React.ChangeEvent<HTMLInputElement>) => 
+						setTitle(e.target.value)
+					}
 					value={title}
 				/>
 			</form>
