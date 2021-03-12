@@ -56,7 +56,7 @@ function BoardContainer({ loadBoard }: Props) {
 			const response = await axios.post('/boards/create', {
 					title: title
 			})
-			const newBoard = response.data
+			const newBoard: TBoard = response.data
 			setBoardsArray([...boardsArray, newBoard])
 			setTitle('')
 		} catch (error) {
